@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""Client library to interact with Geo temporal API v2.
+"""Client library to interact with Geo temporal API v2 and Geostreaming API in Clowder.
 
  This module provides methods to simplify writing client code
- against the Geo temporal API.
+ against the Geostreaming Clowder API and Geo temporal API V2.
 
 """
 
