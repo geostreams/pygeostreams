@@ -10,7 +10,7 @@ from datetime import datetime
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
 
-from pyclowder.client import ClowderClient
+from pygeotemporal.client import ClowderClient
 
 
 class CacheApi(object):

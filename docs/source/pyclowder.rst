@@ -1,4 +1,4 @@
-pyclowder package
+pygeotemporal package
 =================
 
 Subpackages
@@ -6,71 +6,71 @@ Subpackages
 
 .. toctree::
 
-    pyclowder.geostreams
+    pygeotemporal.geostreams
 
 Submodules
 ----------
 
-pyclowder.client module
+pygeotemporal.client module
 -----------------------
 
-.. automodule:: pyclowder.client
+.. automodule:: pygeotemporal.client
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.collections module
+pygeotemporal.collections module
 ----------------------------
 
-.. automodule:: pyclowder.collections
+.. automodule:: pygeotemporal.collections
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.connectors module
+pygeotemporal.connectors module
 ---------------------------
 
-.. automodule:: pyclowder.connectors
+.. automodule:: pygeotemporal.connectors
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.datasets module
+pygeotemporal.datasets module
 -------------------------
 
-.. automodule:: pyclowder.datasets
+.. automodule:: pygeotemporal.datasets
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.extractors module
+pygeotemporal.extractors module
 ---------------------------
 
-.. automodule:: pyclowder.extractors
+.. automodule:: pygeotemporal.extractors
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.files module
+pygeotemporal.files module
 ----------------------
 
-.. automodule:: pyclowder.files
+.. automodule:: pygeotemporal.files
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.sections module
+pygeotemporal.sections module
 -------------------------
 
-.. automodule:: pyclowder.sections
+.. automodule:: pygeotemporal.sections
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.utils module
+pygeotemporal.utils module
 ----------------------
 
-.. automodule:: pyclowder.utils
+.. automodule:: pygeotemporal.utils
 :members:
         :undoc-members:
         :show-inheritance:
@@ -79,7 +79,7 @@ pyclowder.utils module
 Module contents
 ---------------
 
-.. automodule:: pyclowder
+.. automodule:: pygeotemporal
 :members:
         :undoc-members:
         :show-inheritance:

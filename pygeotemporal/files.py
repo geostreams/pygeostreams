@@ -11,9 +11,9 @@ import tempfile
 import requests
 from urllib3.filepost import encode_multipart_formdata
 
-from pyclowder.datasets import get_file_list
-from pyclowder.collections import get_datasets, get_child_collections
-from pyclowder.utils import StatusMessage
+from pygeotemporal.datasets import get_file_list
+from pygeotemporal.collections import get_datasets, get_child_collections
+from pygeotemporal.utils import StatusMessage
 
 # Some sources of urllib3 support warning suppression, but not all
 try:

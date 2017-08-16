@@ -1,7 +1,7 @@
 import logging
 
-from pyclowder.geostreams.sensors import SensorsApi
-from pyclowder.geostreams.streams import StreamsApi
+from pygeotemporal.geostreams.sensors import SensorsApi
+from pygeotemporal.geostreams.streams import StreamsApi
 
 sensor_id = ""
 stream_id = ""

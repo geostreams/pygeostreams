@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-setup(name='pyclowder',
-      version='2.0.0',
-      packages=['pyclowder', 'pyclowder.geostreams'],
+setup(name='pygeotemporal',
+      version='0.1.0',
+      packages=['pygeotemporal', 'pygeotemporal.geostreams'],
       )

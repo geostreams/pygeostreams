@@ -13,7 +13,7 @@ clowder:
 
 # extractors
 # wordcount:
-#   image: clowder/pyclowder:2
+#   image: clowder/pygeotemporal:2
 #   links:
 #     - rabbitmq
 

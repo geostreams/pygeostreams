@@ -9,9 +9,9 @@ RUN apt-get -q -q update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && adduser --system clowder
 
-COPY pyclowder /tmp/pyclowder/pyclowder
-COPY setup.py requirements.txt /tmp/pyclowder/
+COPY pygeotemporal /tmp/pygeotemporal/pygeotemporal
+COPY setup.py requirements.txt /tmp/pygeotemporal/
 
-RUN pip install --upgrade  -r /tmp/pyclowder/requirements.txt \
-    && pip install --upgrade /tmp/pyclowder \
-    && rm -rf /tmp/pyclowder
+RUN pip install --upgrade  -r /tmp/pygeotemporal/requirements.txt \
+    && pip install --upgrade /tmp/pygeotemporal \
+    && rm -rf /tmp/pygeotemporal

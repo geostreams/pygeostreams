@@ -10,8 +10,8 @@ import tempfile
 
 import requests
 
-from pyclowder.collections import get_datasets, get_child_collections
-from pyclowder.utils import StatusMessage
+from pygeotemporal.collections import get_datasets, get_child_collections
+from pygeotemporal.utils import StatusMessage
 
 
 def create_empty(connector, host, key, datasetname, description, parentid=None, spaceid=None):

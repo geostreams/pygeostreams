@@ -19,8 +19,8 @@ import threading
 import time
 import traceback
 
-from pyclowder.connectors import RabbitMQConnector, HPCConnector, LocalConnector
-from pyclowder.utils import CheckMessage, setup_logging
+from pygeotemporal.connectors import RabbitMQConnector, HPCConnector, LocalConnector
+from pygeotemporal.utils import CheckMessage, setup_logging
 
 
 class Extractor(object):

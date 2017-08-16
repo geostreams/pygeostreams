@@ -8,7 +8,7 @@ import logging
 
 import requests
 
-from pyclowder.utils import StatusMessage
+from pygeotemporal.utils import StatusMessage
 
 
 def upload(connector, host, key, sectiondata):

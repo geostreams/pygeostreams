@@ -44,9 +44,9 @@ import time
 import pika
 import requests
 
-import pyclowder.datasets
-import pyclowder.files
-import pyclowder.utils
+import pygeotemporal.datasets
+import pygeotemporal.files
+import pygeotemporal.utils
 
 
 class Connector(object):
@@ -152,8 +152,8 @@ class Connector(object):
         # determine what to download (if needed) and add relevant data to resource
         if resource_type == "dataset":
             try:
-                datasetinfo = pyclowder.datasets.get_info(self, host, secret_key, datasetid)
-                filelist = pyclowder.datasets.get_file_list(self, host, secret_key, datasetid)
+                datasetinfo = pygeotemporal.datasets.get_info(self, host, secret_key, datasetid)
+                filelist = pygeotemporal.datasets.get_file_list(self, host, secret_key, datasetid)
                 triggering_file = None
                 for f in filelist:
                     if f['id'] == fileid:
@@ -177,7 +177,7 @@ class Connector(object):
                     "type": "dataset",
                     "id": datasetid
                 }
-                self.status_update(pyclowder.utils.StatusMessage.error, resource, msg)
+                self.status_update(pygeotemporal.utils.StatusMessage.error, resource, msg)
                 self.message_error(resource)
                 return None
 
@@ -226,7 +226,7 @@ class Connector(object):
         Returns:
             (tmp directory created, tmp file created)
         """
-        file_md = pyclowder.files.download_metadata(self, host, secret_key, fileid)
+        file_md = pygeotemporal.files.download_metadata(self, host, secret_key, fileid)
         md_name = os.path.basename(filepath) + "_metadata.json"
 
         md_dir = tempfile.mkdtemp(suffix=fileid)
@@ -244,7 +244,7 @@ class Connector(object):
         tmp_dirs_created = []
 
         # first check if any files in dataset accessible locally
-        ds_file_list = pyclowder.datasets.get_file_list(self, host, secret_key, resource["id"])
+        ds_file_list = pygeotemporal.datasets.get_file_list(self, host, secret_key, resource["id"])
         for ds_file in ds_file_list:
             file_path = self._check_for_local_file(host, secret_key, ds_file)
             if not file_path:
@@ -262,7 +262,7 @@ class Connector(object):
         if len(located_files) > 0:
             for ds_file in missing_files:
                 # Download file to temp directory
-                inputfile = pyclowder.files.download(self, host, secret_key, ds_file['id'], ds_file['id'],
+                inputfile = pygeotemporal.files.download(self, host, secret_key, ds_file['id'], ds_file['id'],
                                                      ds_file['file_ext'])
                 # Also get file metadata in format expected by extractor
                 (file_md_dir, file_md_tmp) = self._download_file_metadata(host, secret_key, ds_file['id'],
@@ -274,7 +274,7 @@ class Connector(object):
                 tmp_dirs_created.append(file_md_dir)
 
             # Also, get dataset metadata (normally included in dataset .zip download file)
-            ds_md = pyclowder.datasets.download_metadata(self, host, secret_key, resource["id"])
+            ds_md = pygeotemporal.datasets.download_metadata(self, host, secret_key, resource["id"])
             md_name = "%s_dataset_metadata.json" % resource["id"]
             md_dir = tempfile.mkdtemp(suffix=resource["id"])
             (fd, md_file) = tempfile.mkstemp(suffix=md_name, dir=md_dir)
@@ -288,8 +288,8 @@ class Connector(object):
 
         # If we didn't find any files locally, download dataset .zip as normal
         else:
-            inputzip = pyclowder.datasets.download(self, host, secret_key, resource["id"])
-            file_paths = pyclowder.utils.extract_zip_contents(inputzip)
+            inputzip = pygeotemporal.datasets.download(self, host, secret_key, resource["id"])
+            file_paths = pygeotemporal.utils.extract_zip_contents(inputzip)
             tmp_files_created += file_paths
             tmp_files_created.append(inputzip)
 
@@ -324,15 +324,15 @@ class Connector(object):
             self.register_extractor("%s?key=%s" % (url, secret_key))
 
         # tell everybody we are starting to process the file
-        self.status_update(pyclowder.utils.StatusMessage.start, resource, "Started processing")
+        self.status_update(pygeotemporal.utils.StatusMessage.start, resource, "Started processing")
 
         # checks whether to process the file in this message or not
         # pylint: disable=too-many-nested-blocks
         try:
-            check_result = pyclowder.utils.CheckMessage.download
+            check_result = pygeotemporal.utils.CheckMessage.download
             if self.check_message:
                 check_result = self.check_message(self, host, secret_key, resource, body)
-            if check_result != pyclowder.utils.CheckMessage.ignore:
+            if check_result != pygeotemporal.utils.CheckMessage.ignore:
                 if self.process_message:
 
                     # FILE MESSAGES ---------------------------------------
@@ -340,11 +340,11 @@ class Connector(object):
                         file_path = None
                         found_local = False
                         try:
-                            if check_result != pyclowder.utils.CheckMessage.bypass:
-                                file_metadata = pyclowder.files.download_info(self, host, secret_key, resource["id"])
+                            if check_result != pygeotemporal.utils.CheckMessage.bypass:
+                                file_metadata = pygeotemporal.files.download_info(self, host, secret_key, resource["id"])
                                 file_path = self._check_for_local_file(host, secret_key, file_metadata)
                                 if not file_path:
-                                    file_path = pyclowder.files.download(self, host, secret_key, resource["id"],
+                                    file_path = pygeotemporal.files.download(self, host, secret_key, resource["id"],
                                                                          resource["intermediate_id"],
                                                                          resource["file_ext"])
                                 else:
@@ -363,7 +363,7 @@ class Connector(object):
                     else:
                         file_paths, tmp_files, tmp_dirs = [], [], []
                         try:
-                            if check_result != pyclowder.utils.CheckMessage.bypass:
+                            if check_result != pygeotemporal.utils.CheckMessage.bypass:
                                 (file_paths, tmp_files, tmp_dirs) = self._prepare_dataset(host, secret_key, resource)
                             resource['local_paths'] = file_paths
 
@@ -381,32 +381,32 @@ class Connector(object):
                                     logger.exception("Error removing temporary dataset directory")
 
             else:
-                self.status_update(pyclowder.utils.StatusMessage.processing, resource, "Skipped in check_message")
+                self.status_update(pygeotemporal.utils.StatusMessage.processing, resource, "Skipped in check_message")
 
             self.message_ok(resource)
 
         except SystemExit as exc:
             status = "sys.exit : " + exc.message
             logger.exception("[%s] %s", resource['id'], status)
-            self.status_update(pyclowder.utils.StatusMessage.error, resource, status)
+            self.status_update(pygeotemporal.utils.StatusMessage.error, resource, status)
             self.message_resubmit(resource, retry_count)
             raise
         except KeyboardInterrupt:
             status = "keyboard interrupt"
             logger.exception("[%s] %s", resource['id'], status)
-            self.status_update(pyclowder.utils.StatusMessage.error, resource, status)
+            self.status_update(pygeotemporal.utils.StatusMessage.error, resource, status)
             self.message_resubmit(resource, retry_count)
             raise
         except GeneratorExit:
             status = "generator exit"
             logger.exception("[%s] %s", resource['id'], status)
-            self.status_update(pyclowder.utils.StatusMessage.error, resource, status)
+            self.status_update(pygeotemporal.utils.StatusMessage.error, resource, status)
             self.message_resubmit(resource, retry_count)
             raise
         except StandardError as exc:
             status = "standard error : " + str(exc.message)
             logger.exception("[%s] %s", resource['id'], status)
-            self.status_update(pyclowder.utils.StatusMessage.error, resource, status)
+            self.status_update(pygeotemporal.utils.StatusMessage.error, resource, status)
             if retry_count < 10:
                 self.message_resubmit(resource, retry_count + 1)
             else:
@@ -414,12 +414,12 @@ class Connector(object):
         except subprocess.CalledProcessError as exc:
             status = str.format("Error processing [exit code={}]\n{}", exc.returncode, exc.output)
             logger.exception("[%s] %s", resource['id'], status)
-            self.status_update(pyclowder.utils.StatusMessage.error, resource, status)
+            self.status_update(pygeotemporal.utils.StatusMessage.error, resource, status)
             self.message_error(resource)
         except Exception as exc:  # pylint: disable=broad-except
             status = "Error processing : " + exc.message
             logger.exception("[%s] %s", resource['id'], status)
-            self.status_update(pyclowder.utils.StatusMessage.error, resource, status)
+            self.status_update(pygeotemporal.utils.StatusMessage.error, resource, status)
             self.message_error(resource)
 
     def register_extractor(self, endpoints):
@@ -465,13 +465,13 @@ class Connector(object):
         logging.getLogger(__name__).info("[%s] : %s: %s", resource["id"], status, message)
 
     def message_ok(self, resource):
-        self.status_update(pyclowder.utils.StatusMessage.done, resource, "Done processing")
+        self.status_update(pygeotemporal.utils.StatusMessage.done, resource, "Done processing")
 
     def message_error(self, resource):
-        self.status_update(pyclowder.utils.StatusMessage.error, resource, "Error processing message")
+        self.status_update(pygeotemporal.utils.StatusMessage.error, resource, "Error processing message")
 
     def message_resubmit(self, resource, retry_count):
-        self.status_update(pyclowder.utils.StatusMessage.processing, resource, "Resubmitting message (attempt #%s)"
+        self.status_update(pygeotemporal.utils.StatusMessage.processing, resource, "Resubmitting message (attempt #%s)"
                            % retry_count)
 
     def get(self, url, params=None, raise_status=True, **kwargs):
@@ -746,7 +746,7 @@ class RabbitMQHandler(Connector):
         status_report['file_id'] = resource["id"]
         status_report['extractor_id'] = self.extractor_info['name']
         status_report['status'] = "%s: %s" % (status, message)
-        status_report['start'] = pyclowder.utils.iso8601time()
+        status_report['start'] = pygeotemporal.utils.iso8601time()
         self.messages.append({"type": "status",
                               "status": status_report,
                               "resource": resource,

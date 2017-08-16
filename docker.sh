@@ -78,7 +78,7 @@ create() {
 }
 
 # Create the docker containers
-create "."                           "pyclowder"
+create "."                           "pygeotemporal"
 create "sample-extractors/wordcount" "extractors-wordcount"
 
 # remove latest tags

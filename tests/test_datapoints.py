@@ -1,6 +1,6 @@
 import logging
 
-from pyclowder.geostreams.datapoints import DatapointsApi
+from pygeotemporal.geostreams.datapoints import DatapointsApi
 
 
 def test_datapoints_count_by_sensor_get(caplog, host, key):

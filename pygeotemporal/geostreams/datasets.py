@@ -6,7 +6,7 @@
 
 import logging
 
-from pyclowder.client import ClowderClient
+from pygeotemporal.client import ClowderClient
 
 
 class DatasetsApi(object):

@@ -8,7 +8,7 @@ import logging
 
 from dateutil.parser import parse
 
-from pyclowder.client import ClowderClient
+from pygeotemporal.client import ClowderClient
 
 
 class DatapointsApi(object):

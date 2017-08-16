@@ -1,6 +1,6 @@
 import logging
 
-from pyclowder.geostreams.sensors import SensorsApi
+from pygeotemporal.geostreams.sensors import SensorsApi
 
 sensor_id = ""
 

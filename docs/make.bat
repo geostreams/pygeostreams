@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=source
 set BUILDDIR=build
-set SPHINXPROJ=Pyclowder
+set SPHINXPROJ=Pygeotemporal
 
 if "%1" == "" goto help
 

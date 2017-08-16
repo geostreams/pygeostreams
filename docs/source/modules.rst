@@ -1,7 +1,7 @@
-pyclowder
+pygeotemporal
 =========
 
 .. toctree::
 :maxdepth: 4
 
-       pyclowder
+       pygeotemporal

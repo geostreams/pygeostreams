@@ -2,8 +2,8 @@ import logging
 
 from requests import HTTPError
 
-from pyclowder.client import ClowderClient
-from pyclowder.geostreams.sensors import SensorsApi
+from pygeotemporal.client import ClowderClient
+from pygeotemporal.geostreams.sensors import SensorsApi
 
 
 def test_version(caplog, host, key):

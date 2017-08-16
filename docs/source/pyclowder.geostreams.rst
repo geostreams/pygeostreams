@@ -1,77 +1,77 @@
-pyclowder.geostreams package
+pygeotemporal.geostreams package
 ============================
 
 Submodules
 ----------
 
-pyclowder.geostreams.client module
+pygeotemporal.geostreams.client module
 ----------------------------------
 
-.. automodule:: pyclowder.geostreams.client
+.. automodule:: pygeotemporal.geostreams.client
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.geostreams.clowder_ops module
+pygeotemporal.geostreams.clowder_ops module
 ---------------------------------------
 
-.. automodule:: pyclowder.geostreams.clowder_ops
+.. automodule:: pygeotemporal.geostreams.clowder_ops
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.geostreams.last_datapoint module
+pygeotemporal.geostreams.last_datapoint module
 ------------------------------------------
 
-.. automodule:: pyclowder.geostreams.last_datapoint
+.. automodule:: pygeotemporal.geostreams.last_datapoint
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.geostreams.map_names module
+pygeotemporal.geostreams.map_names module
 -------------------------------------
 
-.. automodule:: pyclowder.geostreams.map_names
+.. automodule:: pygeotemporal.geostreams.map_names
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.geostreams.parse_geostream_objects module
+pygeotemporal.geostreams.parse_geostream_objects module
 ---------------------------------------------------
 
-.. automodule:: pyclowder.geostreams.parse_geostream_objects
+.. automodule:: pygeotemporal.geostreams.parse_geostream_objects
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.geostreams.read_files module
+pygeotemporal.geostreams.read_files module
 --------------------------------------
 
-.. automodule:: pyclowder.geostreams.read_files
+.. automodule:: pygeotemporal.geostreams.read_files
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.geostreams.request_json module
+pygeotemporal.geostreams.request_json module
 ----------------------------------------
 
-.. automodule:: pyclowder.geostreams.request_json
+.. automodule:: pygeotemporal.geostreams.request_json
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.geostreams.sensor_stream_create module
+pygeotemporal.geostreams.sensor_stream_create module
 ------------------------------------------------
 
-.. automodule:: pyclowder.geostreams.sensor_stream_create
+.. automodule:: pygeotemporal.geostreams.sensor_stream_create
 :members:
         :undoc-members:
         :show-inheritance:
 
-pyclowder.geostreams.time_transformers module
+pygeotemporal.geostreams.time_transformers module
 ---------------------------------------------
 
-.. automodule:: pyclowder.geostreams.time_transformers
+.. automodule:: pygeotemporal.geostreams.time_transformers
 :members:
         :undoc-members:
         :show-inheritance:
@@ -80,7 +80,7 @@ pyclowder.geostreams.time_transformers module
 Module contents
 ---------------
 
-.. automodule:: pyclowder.geostreams
+.. automodule:: pygeotemporal.geostreams
 :members:
         :undoc-members:
         :show-inheritance:
