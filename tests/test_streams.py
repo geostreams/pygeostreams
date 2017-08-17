@@ -26,7 +26,7 @@ def test_streams_get(caplog, host, key):
     global sensor_id, stream_id
     caplog.setLevel(logging.DEBUG)
     stream_client = StreamsApi(host=host, key=key)
-    stream = stream_client.stream_get_by_name("Test Sensor")
+    stream = stream_client.stream_get_by_name_json("Test Sensor")
     logging.info("Stream %s found", stream_id)
     assert response.status_code == 200 and stream
 
