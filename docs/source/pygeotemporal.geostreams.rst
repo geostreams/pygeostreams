@@ -1,78 +1,78 @@
 pygeotemporal.geostreams package
-============================
+================================
 
 Submodules
 ----------
 
 pygeotemporal.geostreams.client module
-----------------------------------
+--------------------------------------
 
-.. automodule:: pygeotemporal.geostreams.client
-:members:
+.. automodule:: geostreams.client
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.geostreams.clowder_ops module
----------------------------------------
+-------------------------------------------
 
-.. automodule:: pygeotemporal.geostreams.clowder_ops
-:members:
+.. automodule:: geostreams.clowder_ops
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.geostreams.last_datapoint module
-------------------------------------------
+----------------------------------------------
 
-.. automodule:: pygeotemporal.geostreams.last_datapoint
-:members:
+.. automodule:: geostreams.last_datapoint
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.geostreams.map_names module
--------------------------------------
+-----------------------------------------
 
-.. automodule:: pygeotemporal.geostreams.map_names
-:members:
+.. automodule:: geostreams.map_names
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.geostreams.parse_geostream_objects module
----------------------------------------------------
+-------------------------------------------------------
 
-.. automodule:: pygeotemporal.geostreams.parse_geostream_objects
-:members:
+.. automodule:: geostreams.parse_geostream_objects
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.geostreams.read_files module
---------------------------------------
+------------------------------------------
 
-.. automodule:: pygeotemporal.geostreams.read_files
-:members:
+.. automodule:: geostreams.read_files
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.geostreams.request_json module
-----------------------------------------
+--------------------------------------------
 
-.. automodule:: pygeotemporal.geostreams.request_json
-:members:
+.. automodule:: geostreams.request_json
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.geostreams.sensor_stream_create module
-------------------------------------------------
+----------------------------------------------------
 
-.. automodule:: pygeotemporal.geostreams.sensor_stream_create
-:members:
+.. automodule:: geostreams.sensor_stream_create
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.geostreams.time_transformers module
----------------------------------------------
+-------------------------------------------------
 
-.. automodule:: pygeotemporal.geostreams.time_transformers
-:members:
+.. automodule:: geostreams.time_transformers
+        :members:
         :undoc-members:
         :show-inheritance:
 
@@ -80,7 +80,7 @@ pygeotemporal.geostreams.time_transformers module
 Module contents
 ---------------
 
-.. automodule:: pygeotemporal.geostreams
-:members:
+.. automodule:: geostreams
+        :members:
         :undoc-members:
         :show-inheritance:

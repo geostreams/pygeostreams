@@ -1,77 +1,77 @@
 pygeotemporal package
-=================
+=====================
 
 Subpackages
 -----------
 
 .. toctree::
 
-    pygeotemporal.geostreams
+    geostreams
 
 Submodules
 ----------
 
 pygeotemporal.client module
------------------------
+---------------------------
 
-.. automodule:: pygeotemporal.client
-:members:
+.. automodule:: client
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.collections module
-----------------------------
+--------------------------------
 
-.. automodule:: pygeotemporal.collections
-:members:
+.. automodule:: collections
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.connectors module
----------------------------
+-------------------------------
 
-.. automodule:: pygeotemporal.connectors
-:members:
+.. automodule:: connectors
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.datasets module
--------------------------
+-----------------------------
 
-.. automodule:: pygeotemporal.datasets
-:members:
+.. automodule:: datasets
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.extractors module
----------------------------
+-------------------------------
 
-.. automodule:: pygeotemporal.extractors
-:members:
+.. automodule:: extractors
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.files module
-----------------------
+--------------------------
 
-.. automodule:: pygeotemporal.files
-:members:
+.. automodule:: files
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.sections module
--------------------------
+-----------------------------
 
-.. automodule:: pygeotemporal.sections
-:members:
+.. automodule:: sections
+        :members:
         :undoc-members:
         :show-inheritance:
 
 pygeotemporal.utils module
-----------------------
+--------------------------
 
-.. automodule:: pygeotemporal.utils
-:members:
+.. automodule:: utils
+        :members:
         :undoc-members:
         :show-inheritance:
 
@@ -80,6 +80,6 @@ Module contents
 ---------------
 
 .. automodule:: pygeotemporal
-:members:
+        :members:
         :undoc-members:
         :show-inheritance:

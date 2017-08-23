@@ -1,7 +1,7 @@
 pygeotemporal
-=========
+=============
 
 .. toctree::
-:maxdepth: 4
+    :maxdepth: 4
 
-       pygeotemporal
+    pygeotemporal
