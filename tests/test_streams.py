@@ -1,7 +1,8 @@
 import logging
 
-from pygeotemporal.geostreams.sensors import SensorsApi
 from pygeotemporal.geostreams.streams import StreamsApi
+
+from pygeotemporal.sensors import SensorsApi
 
 sensor_id = ""
 stream_id = ""

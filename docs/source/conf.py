@@ -18,7 +18,7 @@
 #
 import os
 import sys
-
+sys.path.insert(0, os.path.abspath('../..'))
 sys.path.insert(0, os.path.abspath('../../pygeotemporal'))
 
 # -- General configuration ------------------------------------------------
@@ -49,8 +49,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Pygeotemporal'
-copyright = u'2017, Rob Kooper, Max Burnette, Luigi Marini'
-author = u'Rob Kooper, Max Burnette, Luigi Marini'
+copyright = u'2017, Luigi Marini, Yan Zhao, Marcus Slavenas'
+author = u'Luigi Marini, Yan Zhao, Marcus Slavenas'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

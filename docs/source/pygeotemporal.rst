@@ -1,12 +1,5 @@
-pygeotemporal package
+Pygeotemporal package
 =====================
-
-Subpackages
------------
-
-.. toctree::
-
-    geostreams
 
 Submodules
 ----------
@@ -19,18 +12,18 @@ pygeotemporal.client module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.collections module
---------------------------------
+pygeotemporal.csv module
+------------------------
 
-.. automodule:: collections
+.. automodule:: csv
         :members:
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.connectors module
+pygeotemporal.datapoints module
 -------------------------------
 
-.. automodule:: connectors
+.. automodule:: datapoints
         :members:
         :undoc-members:
         :show-inheritance:
@@ -43,37 +36,46 @@ pygeotemporal.datasets module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.extractors module
--------------------------------
+pygeotemporal.geocode_convert module
+------------------------------------
 
-.. automodule:: extractors
+.. automodule:: geocode_convert
         :members:
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.files module
---------------------------
+pygeotemporal.map_names module
+------------------------------
 
-.. automodule:: files
+.. automodule:: map_names
         :members:
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.sections module
------------------------------
+pygeotemporal.sensors module
+----------------------------
 
-.. automodule:: sections
+.. automodule:: sensors
         :members:
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.utils module
---------------------------
+pygeotemporal.streams module
+----------------------------
 
-.. automodule:: utils
+.. automodule:: streams
         :members:
         :undoc-members:
         :show-inheritance:
+
+pygeotemporal.time_transformers module
+--------------------------------------
+
+.. automodule:: time_transformers
+        :members:
+        :undoc-members:
+        :show-inheritance:
+
 
 
 Module contents

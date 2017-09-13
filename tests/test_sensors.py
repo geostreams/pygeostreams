@@ -1,6 +1,6 @@
 import logging
 
-from pygeotemporal.geostreams.sensors import SensorsApi
+from pygeotemporal.sensors import SensorsApi
 
 sensor_id = ""
 
