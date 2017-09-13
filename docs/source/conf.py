@@ -127,7 +127,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'Pygeotemporal.tex', u'Pygeotemporal Documentation',
-     u'Rob Kooper, Max Burnette, Luigi Marini', 'manual'),
+     u'Luigi Marini, Yan Zhao, Marcus Slavenas', 'manual'),
 ]
 
 # -- Options for manual page output ---------------------------------------
