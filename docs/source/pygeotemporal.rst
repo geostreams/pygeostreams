@@ -28,14 +28,6 @@ pygeotemporal.datapoints module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.datasets module
------------------------------
-
-.. automodule:: datasets
-        :members:
-        :undoc-members:
-        :show-inheritance:
-
 pygeotemporal.geocode_convert module
 ------------------------------------
 
