@@ -44,6 +44,14 @@ pygeotemporal.map_names module
         :undoc-members:
         :show-inheritance:
 
+pygeotemporal.scheduler module
+------------------------------
+
+.. automodule:: scheduler
+        :members:
+        :undoc-members:
+        :show-inheritance:
+
 pygeotemporal.sensors module
 ----------------------------
 
