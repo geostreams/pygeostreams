@@ -25,13 +25,13 @@ def job(execution, title, toaddress):
         message['To'] = toaddress
 
         server = smtplib.SMTP('smtp.ncsa.illinois.edu', 25)
-        server.sendmail(fromaddress, toaddress, message.as_string())
+        server.sendmail(fromaddress, toaddress.split(", "), message.as_string())
         server.quit()
 
 def scheduler(execution, title, toaddress): 
 	# https://github.com/dbader/schedule
 	# for test
-	# scheduler = schedule.every(1).seconds
+	# scheduler = schedule.every(1).minutes
 	scheduler = schedule.every().monday
 	kwargs = {"execution": execution, "title": title, "toaddress": toaddress}
 	scheduler.do(job, **kwargs)
