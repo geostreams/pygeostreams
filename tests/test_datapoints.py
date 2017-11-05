@@ -9,4 +9,4 @@ def test_datapoints_count_by_sensor_get(caplog, host, key):
     response = client.datapoints_count_by_sensor_get(950)
     sensors = response.text
     logging.info("%s sensors found", sensors)
-    assert response.status_code != 200
+    assert response.status_code == 200

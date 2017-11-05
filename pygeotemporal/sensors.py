@@ -31,6 +31,22 @@ class SensorsApi(object):
         except Exception as e:
             logging.error("Error retrieving sensor list: %s", e.message)
 
+    def sensors_refresh(self):
+        """
+        Get all available sensors one by one, return nothing
+
+        :rtype: `requests.Response`
+        """
+        logging.debug("Getting all sensorsby each id")
+        try:
+            sensorList = self.client.get("/geostreams/sensors")
+
+            for sensor in sensorList.json():
+                self.client.get("/geostreams/sensors/%s" % sensor['id'])
+            return True    
+        except Exception as e:
+            logging.error("Error retrieving sensor list: %s", e.message)
+
     def sensor_get(self, sensor_id):
         """
         Get a specific sensor by id.

@@ -3,4 +3,8 @@ This library makes it easier to interact with
 [Clowder](https://opensource.ncsa.illinois.edu/bitbucket/projects/CATS/repos/clowder)
 to create sensors, streams and datapoints.
 
+To run the test:
+
+	python -m pytest
+
 Example parsers can be found at [Seagrant GLFMSP Parsers](https://opensource.ncsa.illinois.edu/bitbucket/projects/GEOD/repos/seagrant-parsers-py/browse/GLFMSP/glfmsp-2017.py)

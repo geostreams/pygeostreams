@@ -1,7 +1,6 @@
 import logging
 
-from pygeotemporal.geostreams.streams import StreamsApi
-
+from pygeotemporal.streams import StreamsApi
 from pygeotemporal.sensors import SensorsApi
 
 sensor_id = ""
@@ -29,7 +28,7 @@ def test_streams_get(caplog, host, key):
     stream_client = StreamsApi(host=host, key=key)
     stream = stream_client.stream_get_by_name_json("Test Sensor")
     logging.info("Stream %s found", stream_id)
-    assert response.status_code == 200 and stream
+    assert stream
 
 
 def test_streams_delete(caplog, host, key):
