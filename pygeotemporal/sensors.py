@@ -3,6 +3,7 @@
 """
 
 import logging
+import time
 
 from pygeotemporal.client import ClowderClient
 
@@ -42,7 +43,14 @@ class SensorsApi(object):
             sensorList = self.client.get("/geostreams/sensors")
 
             for sensor in sensorList.json():
+                logging.debug("refresh sensor %s", sensor['id'])
                 self.client.get("/geostreams/sensors/%s" % sensor['id'])
+                binningfilter = 'smart'
+                if sensor['properties']['type']['id'] == 'epa': 
+                    binningfilter = 'semi'
+
+                self.client.get("/geostreams/datapoints/bin/%s/1?sensor_id=%s" % (binningfilter, sensor['id']))
+                time.sleep(100)     
             return True    
         except Exception as e:
             logging.error("Error retrieving sensor list: %s", e.message)
