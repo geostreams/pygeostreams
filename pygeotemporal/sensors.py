@@ -32,7 +32,7 @@ class SensorsApi(object):
         except Exception as e:
             logging.error("Error retrieving sensor list: %s", e.message)
 
-    def sensors_refresh(self):
+    def sensors_refresh_cache(self):
         """
         Get all available sensors one by one, return nothing
 
@@ -51,6 +51,29 @@ class SensorsApi(object):
 
                 self.client.get("/geostreams/datapoints/bin/%s/1?sensor_id=%s" % (binningfilter, sensor['id']))
                 time.sleep(100)     
+            return True    
+        except Exception as e:
+            logging.error("Error retrieving sensor list: %s", e.message)
+
+    def sensor_refresh_cache(self, sensor_id):
+        """
+        Get all available sensors one by one, return nothing
+
+        :rtype: `requests.Response`
+        """
+        logging.debug("Getting all sensorsby each id")
+        try:
+            sensor = self.client.get("/geostreams/sensors/%s"% sensor_id)
+
+       
+            logging.debug("refresh sensor %s", sensor['id'])
+            self.client.get("/geostreams/sensors/%s" % sensor_id)
+            binningfilter = 'smart'
+            if sensor['properties']['type']['id'] == 'epa': 
+                binningfilter = 'semi'
+
+            self.client.get("/geostreams/datapoints/bin/%s/1?sensor_id=%s" % (binningfilter, sensor_id))
+    
             return True    
         except Exception as e:
             logging.error("Error retrieving sensor list: %s", e.message)
