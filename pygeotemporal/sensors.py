@@ -38,7 +38,7 @@ class SensorsApi(object):
 
         :rtype: `requests.Response`
         """
-        logging.debug("Getting all sensorsby each id")
+        logging.debug("Getting all sensors by each id")
         try:
             sensorList = self.client.get("/geostreams/sensors")
 
@@ -61,12 +61,11 @@ class SensorsApi(object):
 
         :rtype: `requests.Response`
         """
-        logging.debug("Getting all sensorsby each id")
+        logging.debug("prime cache for sensor %s" % sensor_id)
         try:
-            sensor = self.client.get("/geostreams/sensors/%s"% sensor_id)
-
-       
-            logging.debug("refresh sensor %s", sensor['id'])
+            response = self.client.get("/geostreams/sensors/%s" % sensor_id)
+            sensor = response.json()
+            logging.debug("refresh sensor %s", sensor_id)
             self.client.get("/geostreams/sensors/%s" % sensor_id)
             binningfilter = 'smart'
             if sensor['properties']['type']['id'] == 'epa': 
