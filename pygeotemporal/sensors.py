@@ -4,6 +4,7 @@
 
 import logging
 import time
+from datetime import datetime
 
 from pygeotemporal.client import ClowderClient
 
@@ -45,7 +46,7 @@ class SensorsApi(object):
             for sensor in sensorList.json():
                 logging.debug("refresh sensor %s", sensor['id'])
                 self.client.get("/geostreams/sensors/%s" % sensor['id'])
-                binningfilter = 'smart'
+                binningfilter = self.getAggregationBin(sensor['start_time'], sensor['end_time'])
                 if sensor['properties']['type']['id'] == 'epa': 
                     binningfilter = 'semi'
 
@@ -53,7 +54,7 @@ class SensorsApi(object):
                 time.sleep(100)     
             return True    
         except Exception as e:
-            logging.error("Error retrieving sensor list: %s", e.message)
+            logging.error("Error caching sensor list: %s", e.message)
 
     def sensor_refresh_cache(self, sensor_id):
         """
@@ -65,9 +66,11 @@ class SensorsApi(object):
         try:
             response = self.client.get("/geostreams/sensors/%s" % sensor_id)
             sensor = response.json()
+            if 'min_start_time' not in sensor: 
+                return False
             logging.debug("refresh sensor %s", sensor_id)
             self.client.get("/geostreams/sensors/%s" % sensor_id)
-            binningfilter = 'smart'
+            binningfilter = self.getAggregationBin(sensor['min_start_time'], sensor['max_end_time'])
             if sensor['properties']['type']['id'] == 'epa': 
                 binningfilter = 'semi'
 
@@ -75,7 +78,7 @@ class SensorsApi(object):
     
             return True    
         except Exception as e:
-            logging.error("Error retrieving sensor list: %s", e.message)
+            logging.error("Error caching sensor: %s", e.message)
 
     def sensor_get(self, sensor_id):
         """
@@ -201,3 +204,33 @@ class SensorsApi(object):
         huc_url = "http://gltg.ncsa.illinois.edu/api/huc?lat=" + str(latitude) + "&lng=" + str(longitude)
         huc_data = self.client.get_json(huc_url)
         return huc_data
+
+    def getAggregationBin(self, startTime, endTime):
+        startTime = datetime.strptime(startTime, '%Y-%m-%dT%H:%M:%SZ')
+        endTime = datetime.strptime(endTime, '%Y-%m-%dT%H:%M:%SZ')
+        year = endTime.year - startTime.year
+        timeBin = 'day'
+
+        if year > 100: 
+            timeBin = 'decade'
+        elif year > 50: 
+            timeBin = 'lustrum'
+        elif year > 25:
+            timeBin = 'year'
+        elif year > 10:
+            timeBin = 'season'
+        elif year > 1:
+            timeBin = 'month'
+        else:
+            diffTime = endTime - startTime
+            time = time.divmod(diffTime.days * 86400 + diffTime.seconds, 60)[0] #minutes
+            time = time/ 1440
+            if time > 14:
+                timeBin = 'day'
+            elif time > 3 :
+                timeBin = 'hour'
+            else:
+                timeBin = 'minute'
+        
+        return timeBin
+
