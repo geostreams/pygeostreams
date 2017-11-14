@@ -20,7 +20,7 @@ def test_sensors_get(caplog, host, key):
     global sensor_id
     caplog.setLevel(logging.DEBUG)
     client = SensorsApi(host=host, key=key)
-    refresh = client.sensor_refresh_cache()
+    refresh = client.sensors_refresh_cache()
     assert refresh == True
     response = client.sensor_get(sensor_id)
     sensor = response.json()
