@@ -46,7 +46,7 @@ class SensorsApi(object):
             for sensor in sensorList.json():
                 logging.debug("refresh sensor %s", sensor['id'])
                 self.client.get("/geostreams/sensors/%s" % sensor['id'])
-                binningfilter = self.getAggregationBin(sensor['start_time'], sensor['end_time'])
+                binningfilter = self.getAggregationBin(sensor['min_start_time'], sensor['max_end_time'])
                 if sensor['properties']['type']['id'] == 'epa': 
                     binningfilter = 'semi'
 
