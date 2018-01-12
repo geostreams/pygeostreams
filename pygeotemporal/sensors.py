@@ -200,11 +200,6 @@ class SensorsApi(object):
         except Exception as e:
             logging.error("Error updating sensor statistics for sensor %s: %s", sensor_id, e.message)
 
-    def sensor_get_huc(self, latitude, longitude):
-        huc_url = "http://gltg.ncsa.illinois.edu/api/huc?lat=" + str(latitude) + "&lng=" + str(longitude)
-        huc_data = self.client.get_json(huc_url)
-        return huc_data
-
     def getAggregationBin(self, startTime, endTime):
         startTime = datetime.strptime(startTime, '%Y-%m-%dT%H:%M:%SZ')
         endTime = datetime.strptime(endTime, '%Y-%m-%dT%H:%M:%SZ')
@@ -233,4 +228,3 @@ class SensorsApi(object):
                 timeBin = 'minute'
         
         return timeBin
-
