@@ -90,9 +90,15 @@ class StreamsApi(object):
         try:
             return self.client.delete("/geostreams/streams/%s" % stream_id)
         except Exception as e:
-            logging.error("Error retrieving stream %s: %s", stream_id, e.message)
+            logging.error("Error deleting stream %s: %s", stream_id, e.message)
 
     def stream_create_json_from_sensor(self, sensor):
+        """
+        Create stream from sensor. Note: It does not post the stream to the API
+
+        :param: sensor
+        :return: stream Json object
+        """
         stream = {
             "sensor_id": str(sensor["id"]),
             "name": sensor["name"],
@@ -102,3 +108,12 @@ class StreamsApi(object):
         }
 
         return stream
+
+    def stream_delete_range(self, start, end):
+        """
+        Deletes streams in a range of indexes [start, end]
+
+        """
+        for i in range(start, end + 1):
+            self.stream_delete(i)
+        return

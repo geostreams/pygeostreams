@@ -104,3 +104,12 @@ class DatapointsApi(object):
 
 
         return datapoint
+
+    def datapoint_create_bulk(self, datapoints, stream_id):
+        logging.debug("Adding Datapoints in Bulk")
+        try:
+            return self.client.post("/geostreams/datapoints/bulk", {"datapoints": datapoints, "stream_id": stream_id})
+        except Exception as e:
+            logging.error("Error adding bulk datapoint: %s", e.message)
+
+
