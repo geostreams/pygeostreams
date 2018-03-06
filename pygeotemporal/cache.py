@@ -24,24 +24,11 @@ class CacheApi(object):
         else:
             self.client = ClowderClient(host=host, key=key, username=username, password=password)
 
-    def sensors_get(self):
-        """
-        Get the list of all available sensors.
-
-        :return: Full list of sensors.
-        :rtype: JSON
-        """
-        logging.debug("Getting all sensors")
-        try:
-            return self.client.get_json("/geostreams/sensors")
-        except Exception as e:
-            logging.error("Error retrieving sensor list: %s", e.message)
-
     def invalidate_cache(self, sensor_id):
         """Invalidate sensor cache"""
         logging.debug("Invalidating cache for sensor %s" % sensor_id)
         try:
-            return self.client.get("/cache/invalidate?sensor_id=%s")
+            return self.client.get("/geostreams/cache/invalidate?sensor_id=%s" % sensor_id)
         except Exception as e:
             logging.error("Error invalidating cache for sensor %s" % sensor_id, e.message)
 
@@ -50,9 +37,10 @@ class CacheApi(object):
         logging.info(" Caching datapoints for sensor with id: " + str(sensor_id))
 
         try:
-            sensor = self.client.get("/sensors/%s" % sensor_id).json()
+            sensor = self.client.get("/geostreams/sensors/%s" % str(sensor_id)).json()
         except Exception as e:
             logging.error("Error getting sensor %s" % sensor_id, e.message)
+
 
         # Calculate time in days between start and end date of sensor info
         delta_days = (datetime.strptime(sensor['max_end_time'], "%Y-%m-%dT%H:%M:%SZ") -
@@ -80,6 +68,6 @@ class CacheApi(object):
                 time_bin = 'minute'
 
         try:
-            return self.client.get("/datapoints/bin/%s/1?sensor_id=%s" % time_bin, sensor_id)
+            return self.client.get("/geostreams/datapoints/bin/"+ str(time_bin) + "/1?sensor_id=" + str(sensor_id))
         except Exception as e:
             logging.error("Error priming cache for sensor %s" % sensor_id, e.message)
