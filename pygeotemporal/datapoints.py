@@ -61,15 +61,14 @@ class DatapointsApi(object):
             url = "/geostreams/datapoints?stream_id=%s&since=%s" % (stream_id, since)
         try:
             datapoints = self.client.get_json(url)
+            if isinstance(datapoints, list) and len(datapoints) > 0:
+                latest_datapoint = datapoints[-1]
+                start_date = parse(latest_datapoint['start_time']).strftime('%Y-%m-%d-%H-%M')
+                logging.info("Fetched datapoints for " + str(sensor_id) + " starting on " + start_date)
+            else:
+                logging.debug("No datapoints exist for " + str(sensor_id))
         except Exception as e:
             logging.error("Error getting datapoints for stream %s since %s: %s", stream_id, since, e.message)
-
-        if isinstance(datapoints, list) and len(datapoints) > 0:
-            latest_datapoint = datapoints[-1]
-            start_date = parse(latest_datapoint['start_time']).strftime('%Y-%m-%d-%H-%M')
-            logging.info("Fetched datapoints for " + str(sensor_id) + " starting on " + start_date)
-        else:
-            logging.debug("No datapoints exist for " + str(sensor_id))
 
         return latest_datapoint
 
