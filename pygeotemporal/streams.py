@@ -3,7 +3,7 @@
 """
 
 import logging
-
+import json
 from pygeotemporal.client import ClowderClient
 
 
@@ -31,6 +31,13 @@ class StreamsApi(object):
         except Exception as e:
             logging.error("Error retrieving stream list: %s", e.message)
 
+    def streams_get_by_id(self, id):
+        logging.debug("Getting stream with id %s" % id)
+        try:
+            return self.client.get("/geostreams/streams/%s" % id)
+        except Exception as e:
+            logging.error("Error retrieving stream with id %s: %s" % id, e.message )
+
     def stream_get_by_name_json(self, stream_name):
         """
         Get a specific stream by id.
@@ -57,7 +64,7 @@ class StreamsApi(object):
         try:
             return self.client.post("/geostreams/streams", stream)
         except Exception as e:
-            logging.error("Error retrieving stream %s: %s", stream_id, e.message)
+            logging.error("Error retrieving streams: %s", e.message)
 
     def stream_post_json(self, stream):
         """
@@ -109,11 +116,23 @@ class StreamsApi(object):
 
         return stream
 
-    def stream_delete_range(self, start, end):
+    def stream_delete_range(self, start, end, keyword):
         """
-        Deletes streams in a range of indexes [start, end]
+        Deletes streams in a range of indexes [start, end] where the name includes keyword.
 
         """
+
         for i in range(start, end + 1):
-            self.stream_delete(i)
+            stream = self.streams_get_by_id(i)
+            json_stream = json.loads(stream.content)
+            if 'name' in json_stream:
+
+                if keyword.lower() in json_stream['name'].encode("ascii").lower():
+                    self.stream_delete(i)
+                    logging.info("Stream Deleted, %s", i)
+                else:
+                    logging.info("Sensor not deleted %s, no keyword match, stream name: %s", i, json_stream["name"])
+
+            else:
+                logging.info("No name keyword in stream, stream doesn't exist. Stream Id: %s", i)
         return
