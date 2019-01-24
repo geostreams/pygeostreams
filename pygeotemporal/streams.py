@@ -2,6 +2,9 @@
     Clowder Streams API
 """
 
+from builtins import str
+from builtins import range
+from builtins import object
 import logging
 import json
 from pygeotemporal.client import ClowderClient

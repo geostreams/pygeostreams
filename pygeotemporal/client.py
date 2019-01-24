@@ -4,6 +4,7 @@
     This module contains a basic client to interact with the Clowder API.
 """
 
+from builtins import object
 import json
 import logging
 import time

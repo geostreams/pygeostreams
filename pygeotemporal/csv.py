@@ -3,9 +3,12 @@
 """
     Load data from CSV files.
 """
+from __future__ import absolute_import
+from builtins import range
+from builtins import object
 import logging
 
-from time_transformers import time2utc
+from .time_transformers import time2utc
 
 
 def load(file):

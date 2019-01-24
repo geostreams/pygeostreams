@@ -1,7 +1,10 @@
 """
     Clowder Sensors API.
 """
+from __future__ import division
 
+from builtins import object
+from past.utils import old_div
 import logging
 import time
 from datetime import datetime
@@ -219,7 +222,7 @@ class SensorsApi(object):
         else:
             diffTime = endTime - startTime
             time = time.divmod(diffTime.days * 86400 + diffTime.seconds, 60)[0] #minutes
-            time = time/ 1440
+            time = old_div(time, 1440)
             if time > 14:
                 timeBin = 'day'
             elif time > 3 :

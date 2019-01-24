@@ -4,6 +4,8 @@
     Clowder Cache API
 """
 
+from builtins import str
+from builtins import object
 import logging
 from datetime import datetime
 

@@ -11,7 +11,7 @@ def test_version(caplog, host, key):
     client = ClowderClient(host=host, key=key)
     version = client.version()
     logging.info("Clowder version %s", version)
-    assert len(version.keys()) != 0
+    assert len(list(version.keys())) != 0
 
 
 def test_get_sensors(caplog, host, key):

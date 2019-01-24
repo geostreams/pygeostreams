@@ -4,6 +4,7 @@
     Parser scheduler.
 """
 
+from builtins import range
 import schedule
 import time
 import subprocess

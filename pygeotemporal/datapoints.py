@@ -2,6 +2,8 @@
     Clowder Datapoints API
 """
 
+from builtins import str
+from builtins import object
 import logging
 
 from dateutil.parser import parse
