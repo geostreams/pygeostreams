@@ -1,14 +1,16 @@
 import logging
 
 from pygeotemporal.sensors import SensorsApi
+import pytest
+import json
 
-sensor_id = ""
 
-
-def test_sensors_post(caplog, host, key):
-    global sensor_id
+# testing post, get, and delete here so we don't populate db with test sensors
+def test_sensor_endpoint(caplog, host, username, password):
     caplog.setLevel(logging.DEBUG)
-    client = SensorsApi(host=host, key=key)
+    client = SensorsApi(host=host, username=username, password=password)
+
+    # test create sensor
     sensor_json = client.sensor_create_json("Test Sensor", 40.1149202, -88.2270582, 0, "", "ER")
     response = client.sensor_post(sensor_json)
     body = response.json()
@@ -16,22 +18,34 @@ def test_sensors_post(caplog, host, key):
     logging.info("Sensor %i posted", body['id'])
     assert response.status_code == 200 and body
 
-
-def test_sensors_get(caplog, host, key):
-    global sensor_id
-    caplog.setLevel(logging.DEBUG)
-    client = SensorsApi(host=host, key=key)
+    # test get sensor
     response = client.sensor_get(sensor_id)
     sensor = response.json()
     logging.info("Sensor %s found" % sensor_id)
     assert response.status_code == 200 and sensor
 
+    # test update sensor
+    response = client.sensor_statistics_post(int(sensor_id))
+    assert response.status_code == 200
 
-def test_sensors_delete(caplog, host, key):
-    global sensor_id
-    caplog.setLevel(logging.DEBUG)
-    client = SensorsApi(host=host, key=key)
+    # test delete sensor
     response = client.sensor_delete(sensor_id)
     sensor = response.json()
     logging.info("Sensor %s deleted" % sensor_id)
     assert response.status_code == 200 and sensor
+
+
+@pytest.mark.skip(reason="need to manually set the sensor id")
+def test_delete_sensor(caplog, host, username, password):
+    caplog.setLevel(logging.DEBUG)
+    client = SensorsApi(host=host, username=username, password=password)
+
+    sensor_name = "USGS-07029150"
+
+    r = client.sensor_get_by_name(sensor_name)
+    sensor_r = json.loads(r.text)
+    sensor_id = sensor_r["sensors"][0]["id"]
+    response = client.sensor_delete(sensor_id)
+
+    logging.info("Sensor %s deleted" % sensor_id)
+    assert response.status_code == 200 and sensor_r

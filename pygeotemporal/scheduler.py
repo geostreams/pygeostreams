@@ -6,11 +6,11 @@
 
 from builtins import range
 import schedule
-import time
 import subprocess
 import smtplib
 import time
 from email.mime.text import MIMEText
+
 
 def jobexecute(execution, title, toaddress, sendemail):
     try:
@@ -33,8 +33,9 @@ def jobexecute(execution, title, toaddress, sendemail):
 
         return 0
 
+
+# re-execute the job for executionnumber times, and send email the last time. sleep for 10 mins between each execution.
 def job(execution, title, toaddress, executionnumber):
-# reexecute the job for executionnumber times, and send email the last time. sleep for 10 mins between each execution. 
     for i in range(0, executionnumber - 1):
         execute_status = jobexecute(execution, title, toaddress, False)
         if execute_status == 1:
@@ -44,14 +45,15 @@ def job(execution, title, toaddress, executionnumber):
     jobexecute(execution, title, toaddress, True)
     return 
 
-def scheduler(execution, title, toaddress, executionnumber): 
-	# https://github.com/dbader/schedule
-	# for test
-	# scheduler = schedule.every(1).minutes
-	scheduler = schedule.every().monday
-	kwargs = {"execution": execution, "title": title, "toaddress": toaddress, "executionnumber": executionnumber}
-	scheduler.do(job, **kwargs)
 
-	while True:
-	    schedule.run_pending()
-	    time.sleep(1)
+def scheduler(execution, title, toaddress, executionnumber): 
+    # https://github.com/dbader/schedule
+    # for test
+    # scheduler = schedule.every(1).minutes
+    scheduler = schedule.every().monday
+    kwargs = {"execution": execution, "title": title, "toaddress": toaddress, "executionnumber": executionnumber}
+    scheduler.do(job, **kwargs)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

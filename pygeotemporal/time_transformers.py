@@ -10,11 +10,13 @@ def time2utc(date_in, time_zone="America/Chicago"):
 
     return date_out
 
+
 # convert year and julian day to date
 def julian_day_to_month_day(year,julian_day):
     date = datetime(int(year), 1, 1) + timedelta(int(julian_day))
 
     return date
+
 
 # convert calendar date month/day/2-digit-year to YYYY-MM-DDT00:00:00Z (assumes there is no time so all set to zero
 def calendar_date2utc(date_in,time_zone="America/Chicago"):

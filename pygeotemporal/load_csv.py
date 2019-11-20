@@ -8,7 +8,7 @@ from builtins import range
 from builtins import object
 import logging
 
-from .time_transformers import time2utc
+from pygeotemporal.time_transformers import time2utc
 
 
 def load(file):

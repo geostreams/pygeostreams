@@ -1,5 +1,5 @@
 """
-    Clowder Datapoints API
+    Geostreams Datapoints API
 """
 
 from builtins import str
@@ -8,19 +8,19 @@ import logging
 
 from dateutil.parser import parse
 
-from pygeotemporal.client import ClowderClient
+from pygeotemporal.client import GeostreamsClient
 
 
 class DatapointsApi(object):
     """
         API to manage the REST CRUD endpoints for datapoints.
     """
-    def __init__(self, client=None, host=None, key=None, username=None, password=None):
+    def __init__(self, client=None, host=None, username=None, password=None):
         """Set client if provided otherwise create new one"""
         if client:
             self.api_client = client
         else:
-            self.client = ClowderClient(host=host, key=key, username=username, password=password)
+            self.client = GeostreamsClient(host=host, username=username, password=password)
 
     def datapoint_post(self, datapoint):
         """
@@ -31,7 +31,7 @@ class DatapointsApi(object):
         """
         logging.debug("Adding datapoint")
         try:
-            return self.client.post("/geostreams/datapoints", datapoint)
+            return self.client.post("/datapoints", datapoint)
         except Exception as e:
             logging.error("Error adding datapoint %s: %s", datapoint, e.message)
 
@@ -44,7 +44,7 @@ class DatapointsApi(object):
         """
         logging.debug("Counting datapoints by sensor")
         try:
-            return self.client.get("/geostreams/datapoints?sensor_id=%s&onlyCount=true" % sensor_id)
+            return self.client.get("/datapoints?sensor_id=%s&onlyCount=true" % sensor_id)
         except Exception as e:
             logging.error("Error counting datapoints by sensor %s: %s", sensor_id, e.message)
 
@@ -58,9 +58,9 @@ class DatapointsApi(object):
         latest_datapoint = None
         # logging.info("Getting datapoints for stream %s since %s " % stream_id, since)
         if since is None:
-            url = "/geostreams/datapoints?stream_id=%s" % stream_id
+            url = "/datapoints?stream_id=%s" % stream_id
         else:
-            url = "/geostreams/datapoints?stream_id=%s&since=%s" % (stream_id, since)
+            url = "/datapoints?stream_id=%s&since=%s" % (stream_id, since)
         try:
             datapoints = self.client.get_json(url)
             if isinstance(datapoints, list) and len(datapoints) > 0:
@@ -103,13 +103,12 @@ class DatapointsApi(object):
             if procedures is not None:
                 datapoint['properties']['procedures'] = procedures
 
-
         return datapoint
 
-    def datapoint_create_bulk(self, datapoints, stream_id):
+    def datapoint_create_bulk(self, datapoints):
         logging.debug("Adding Datapoints in Bulk")
         try:
-            return self.client.post("/geostreams/datapoints/bulk", {"datapoints": datapoints, "stream_id": stream_id})
+            return self.client.post("/datapoints/bulk", datapoints)
         except Exception as e:
             logging.error("Error adding bulk datapoint: %s", e.message)
 

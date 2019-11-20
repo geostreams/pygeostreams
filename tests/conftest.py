@@ -2,14 +2,12 @@ import pytest
 
 
 def pytest_addoption(parser):
-    parser.addoption("--host", action="store", default="http://localhost:9000/clowder",
+    parser.addoption("--host", action="store", default="http://localhost:9000",
                      help="Host, including protocol and port. ")
     parser.addoption("--username", action="store",
-                     help="Clowder username")
+                     help="Geostreams username")
     parser.addoption("--password", action="store",
-                     help="Clowder user password")
-    parser.addoption("--key", action="store", default="r1ek3rs",
-                     help="Clowder API Key, use this or username/password combo")
+                     help="Geostreams user password")
 
 
 @pytest.fixture(scope="module")
@@ -27,6 +25,4 @@ def password(request):
     return request.config.getoption("--password")
 
 
-@pytest.fixture(scope="module")
-def key(request):
-    return request.config.getoption("--key")
+

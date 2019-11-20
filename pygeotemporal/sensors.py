@@ -1,27 +1,26 @@
 """
-    Clowder Sensors API.
+    Geostreams Sensors API.
 """
 from __future__ import division
 
 from builtins import object
-from past.utils import old_div
 import logging
 import time
 from datetime import datetime
 
-from pygeotemporal.client import ClowderClient
+from pygeotemporal.client import GeostreamsClient
 
 
 class SensorsApi(object):
     """
         API to manage the REST CRUD endpoints for sensors.
     """
-    def __init__(self, client=None, host=None, key=None, username=None, password=None):
+    def __init__(self, client=None, host=None, username=None, password=None):
         """Set client if provided otherwise create new one"""
         if client:
             self.api_client = client
         else:
-            self.client = ClowderClient(host=host, key=key, username=username, password=password)
+            self.client = GeostreamsClient(host=host, username=username, password=password)
 
     def sensors_get(self):
         """
@@ -32,7 +31,7 @@ class SensorsApi(object):
         """
         logging.debug("Getting all sensors")
         try:
-            return self.client.get("/geostreams/sensors")
+            return self.client.get("/sensors")
         except Exception as e:
             logging.error("Error retrieving sensor list: %s", e.message)
 
@@ -44,16 +43,16 @@ class SensorsApi(object):
         """
         logging.debug("Getting all sensors by each id")
         try:
-            sensorList = self.client.get("/geostreams/sensors")
+            sensor_list = self.client.get("/sensors")
 
-            for sensor in sensorList.json():
+            for sensor in sensor_list.json():
                 logging.debug("refresh sensor %s", sensor['id'])
-                self.client.get("/geostreams/sensors/%s" % sensor['id'])
-                binningfilter = self.getAggregationBin(sensor['min_start_time'], sensor['max_end_time'])
+                self.client.get("/sensors/%s" % sensor['id'])
+                binning_filter = self.get_aggregation_bin(sensor['min_start_time'], sensor['max_end_time'])
                 if sensor['properties']['type']['id'] == 'epa': 
-                    binningfilter = 'semi'
+                    binning_filter = 'semi'
 
-                self.client.get("/geostreams/datapoints/bin/%s/1?sensor_id=%s" % (binningfilter, sensor['id']))
+                self.client.get("/datapoints/bin/%s/1?sensor_id=%s" % (binning_filter, sensor['id']))
                 time.sleep(100)     
             return True    
         except Exception as e:
@@ -67,17 +66,17 @@ class SensorsApi(object):
         """
         logging.debug("prime cache for sensor %s" % sensor_id)
         try:
-            response = self.client.get("/geostreams/sensors/%s" % sensor_id)
+            response = self.client.get("/sensors/%s" % sensor_id)
             sensor = response.json()
             if 'min_start_time' not in sensor: 
                 return False
             logging.debug("refresh sensor %s", sensor_id)
-            self.client.get("/geostreams/sensors/%s" % sensor_id)
-            binningfilter = self.getAggregationBin(sensor['min_start_time'], sensor['max_end_time'])
+            self.client.get("/sensors/%s" % sensor_id)
+            binningfilter = self.get_aggregation_bin(sensor['min_start_time'], sensor['max_end_time'])
             if sensor['properties']['type']['id'] == 'epa': 
                 binningfilter = 'semi'
 
-            self.client.get("/geostreams/datapoints/bin/%s/1?sensor_id=%s" % (binningfilter, sensor_id))
+            self.client.get("/datapoints/bin/%s/1?sensor_id=%s" % (binningfilter, sensor_id))
     
             return True    
         except Exception as e:
@@ -92,7 +91,7 @@ class SensorsApi(object):
         """
         logging.debug("Getting sensor %s" % sensor_id)
         try:
-            return self.client.get("/geostreams/sensors/%s" % sensor_id)
+            return self.client.get("/sensors/%s" % sensor_id)
         except Exception as e:
             logging.error("Error retrieving sensor %s: %s", sensor_id, e.message)
 
@@ -105,7 +104,7 @@ class SensorsApi(object):
         """
         logging.debug("Getting sensor %s" % sensor_name)
         try:
-            return self.client.get("/geostreams/sensors?sensor_name=" + sensor_name)
+            return self.client.get("/sensors?sensor_name=" + sensor_name)
         except Exception as e:
             logging.error("Error retrieving sensor %s: %s", sensor_name, e.message)
             return None
@@ -119,7 +118,7 @@ class SensorsApi(object):
         """
         logging.debug("Adding sensor")
         try:
-            return self.client.post("/geostreams/sensors", sensor)
+            return self.client.post("/sensors", sensor)
         except Exception as e:
             logging.error("Error adding sensor %s: %s", sensor['name'], e.message)
 
@@ -132,15 +131,20 @@ class SensorsApi(object):
         """
         logging.debug("Adding or getting sensor")
         try:
-            sensor_from_clowder = self.sensor_get_by_name(sensor['name']).json()
-            if not sensor_from_clowder:
-                logging.info("Creating sensor with name: " + sensor['name'])
-                sensor_from_clowder = self.client.post("/geostreams/sensors", sensor)
-                return sensor_from_clowder.json()
 
-            else:
+            if 'id' in sensor:
+                sensor_from_geostreams = self.sensor_get(sensor['id']).json()
+            elif 'name' in sensor:
+                sensor_from_geostreams = self.sensor_get_by_name(sensor['name']).json()
+
+            if len(sensor_from_geostreams['sensors']) > 0:
                 logging.info("Found sensor " + sensor['name'])
-                return sensor_from_clowder[0]
+                return sensor_from_geostreams['sensors'][0]
+            else:
+                logging.info("Creating sensor with name: " + sensor['name'])
+                sensor_id = (self.client.post("/sensors", sensor)).json()
+                sensor_from_geostreams = self.sensor_get(sensor_id['id']).json()
+                return sensor_from_geostreams['sensor']
         except Exception as e:
             logging.error("Error adding sensor %s: %s", sensor['name'], e.message)
 
@@ -148,17 +152,17 @@ class SensorsApi(object):
         """
         Delete a specific sensor by id.
 
-        :return: If successfull or not.
+        :return: If successful or not.
         :rtype: `requests.Response`
         """
         logging.debug("Deleting sensor %s" % sensor_id)
         try:
-            return self.client.delete("/geostreams/sensors/%s" % sensor_id)
+            return self.client.delete("/sensors/%s" % sensor_id)
         except Exception as e:
             logging.error("Error retrieving sensor %s: %s", sensor_id, e.message)
 
-    def sensor_create_json(self, name, longitude, latitude, elevation, popupContent, region, huc=None, network=None,
-                           id=None, title=None):
+    def sensor_create_json(self, name, longitude, latitude, elevation, popup_content, region, huc=None, network=None,
+                           organization_id=None, title=None):
         """Create sensor definition in JSON"""
         sensor = {
             "name": name,
@@ -173,20 +177,22 @@ class SensorsApi(object):
             },
             "properties": {
                 "name": name,
-                "popupContent": popupContent,
+                "popupContent": popup_content,
                 "region": region
             }
         }
-        if huc:
-            sensor["properties"]["huc"] = huc
+
         if network or id or title:
             sensor['properties']['type'] = {}
-            if network:
-                sensor['properties']['type']['network'] = network
-            if id:
-                sensor['properties']['type']['id'] = id
-            if title:
-                sensor['properties']['type']['title'] = title
+
+        if huc:
+            sensor["properties"]["huc"] = huc
+        if network:
+            sensor['properties']['type']['network'] = network
+        if organization_id:
+            sensor['properties']['type']['id'] = organization_id
+        if title:
+            sensor['properties']['type']['title'] = title
         return sensor
 
     def sensor_statistics_post(self, sensor_id):
@@ -197,37 +203,48 @@ class SensorsApi(object):
         :rtype: `requests.Response`
         """
         logging.debug("Updating sensor statistics")
+        sensor = (self.sensor_get(sensor_id)).json()["sensor"]
         try:
-            # TODO this should be a PUT on the API side, not a GET
-            return self.client.get_auth("/geostreams/sensors/%s/update" % sensor_id)
+            return self.client.put("/sensors/%s/update" % sensor_id, content=sensor)
         except Exception as e:
             logging.error("Error updating sensor statistics for sensor %s: %s", sensor_id, e.message)
 
-    def getAggregationBin(self, startTime, endTime):
-        startTime = datetime.strptime(startTime, '%Y-%m-%dT%H:%M:%SZ')
-        endTime = datetime.strptime(endTime, '%Y-%m-%dT%H:%M:%SZ')
-        year = endTime.year - startTime.year
-        timeBin = 'day'
+    def get_aggregation_bin(self, start_time, end_time):
+        start_time = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%SZ')
+        end_time = datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%SZ')
+        year = end_time.year - start_time.year
 
         if year > 100: 
-            timeBin = 'decade'
+            time_bin = 'decade'
         elif year > 50: 
-            timeBin = 'lustrum'
+            time_bin = 'lustrum'
         elif year > 25:
-            timeBin = 'year'
+            time_bin = 'year'
         elif year > 10:
-            timeBin = 'season'
+            time_bin = 'season'
         elif year > 1:
-            timeBin = 'month'
+            time_bin = 'month'
         else:
-            diffTime = endTime - startTime
-            time = time.divmod(diffTime.days * 86400 + diffTime.seconds, 60)[0] #minutes
-            time = old_div(time, 1440)
-            if time > 14:
-                timeBin = 'day'
-            elif time > 3 :
-                timeBin = 'hour'
+            diff_time = end_time - start_time
+            b_time = divmod(diff_time.days * 86400 + diff_time.seconds, 60)[0]  # minutes
+            b_time = b_time / 1440
+            if b_time > 14:
+                time_bin = 'day'
+            elif b_time > 3:
+                time_bin = 'hour'
             else:
-                timeBin = 'minute'
-        
-        return timeBin
+                time_bin = 'minute'
+        return time_bin
+
+    def update_sensor_metadata(self, sensor):
+        """
+        Update sensor metadata
+        :param sensor: Sensor json
+        :return: Http response
+        """
+        logging.debug("Updating sensor's metadata")
+        sensor_id = sensor["id"]
+        try:
+            return self.client.put("/sensors/%s" % sensor_id, content=sensor)
+        except Exception as e:
+            logging.error("Error updating sensor metadata for sensor %s: %s", sensor_id, e.message)

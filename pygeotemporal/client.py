@@ -1,48 +1,52 @@
 """
-    ClowderClient
+    Geostreams Client
     ~~~
-    This module contains a basic client to interact with the Clowder API.
+    This module contains a basic client to interact with the Geostreams API.
 """
+
 
 from builtins import object
 import json
 import logging
 import time
-
 import requests
 
 
-class ClowderClient(object):
+class GeostreamsClient(object):
     """
-    Client to Clowder API to store connection information.
+    Client to Geostreams API to store connection information.
 
     The `path` parameter used by many of the methods in this class call a specific path relative to the host + "api".
-    For example passing in "/version" for host "https://seagrant-dev.ncsa.illinois.edu/clowder/" will call
-    "https://seagrant-dev.ncsa.illinois.edu/clowder/api/version". Make sure to include the slash at the beginning of
+    For example passing in "/version" for host "https://seagrant-dev.ncsa.illinois.edu/" will call
+    "https://seagrant-dev.ncsa.illinois.edu/api/version". Make sure to include the slash at the beginning of
     the fragment.
     """
     logger = logging.getLogger(__name__)
     api_fragment = "/api"
     max_retries = 10
     call_timeout = 5
-    headers = {'content-type': 'application/json'}
 
     def __init__(self, *args, **kwargs):
         """
-        Create an instance of `ClowderClient`.
+        Create an instance of `GeostreamsClient`.
 
         :param string host: The root host url of the specific geostreaming API we are connecting to.
         :param string key: The API key used to write to the API. Set this or `username`/`password` below.
-        :param string username: HTTP Basic Authentication username. Set this or `key`.
-        :param string password: HTTP Basic Authentication password. Set this or `key`.
+        :param string username: HTTP Basic Authentication username.
+        :param string password: HTTP Basic Authentication password.
          """
         self.host = kwargs.get('host')
-        self.key = kwargs.get('key')
         self.username = kwargs.get('username')
         self.password = kwargs.get('password')
+        self.user = {'identifier': self.username, 'password': self.password}
+
+        login_url = self.host + "/api/authenticate"
+        r = requests.post(login_url, json=self.user, headers={'Content-Type': 'application/json'})
+
+        self.headers = {"x-auth-token": r.headers["x-auth-token"], "Content-Encoding": "application/json"}
 
     def version(self):
-        """Return Clowder version info."""
+        """Return Geostreams version info."""
         url = self.host + self.api_fragment + "/version"
         self.logger.debug("GET %s", url)
         r = requests.get(url)
@@ -61,7 +65,7 @@ class ClowderClient(object):
         """
         Call HTTP GET against `path`. This version returns a JSON object.
 
-        :param path: Endpoint path relative to Clowder api.
+        :param path: Endpoint path relative to Geostreams api.
         :return: JSON from body of response
         :rtype: JSON
         :raises: `requests.HTTPError`
@@ -75,7 +79,7 @@ class ClowderClient(object):
         """
         Call HTTP GET against `path`. This version returns a `requests.Response` object.
 
-        :param path: Endpoint path relative to Clowder api.
+        :param path: Endpoint path relative to Geostreams api.
         :return: Full response object so that we can check status on it and then retrieve the JSON body.
         :rtype: `requests.Response`
         :raises: `requests.HTTPError`
@@ -86,29 +90,12 @@ class ClowderClient(object):
         except Exception as e:
             logging.exception("Error calling GET url %s: %s" % url, e.message)
 
-    def get_auth(self, path):
-        """
-        Call HTTP GET against `path`. This version returns a `requests.Response` object.
-
-        :param path: Endpoint path relative to Clowder api.
-        :return: Full response object so that we can check status on it and then retrieve the JSON body.
-        :rtype: `requests.Response`
-        :raises: `requests.HTTPError`
-        """
-        url = self.host + self.api_fragment + path
-        params = {'key': self.key}
-
-        try:
-            return requests.get(url, params=params, headers=self.headers, auth=(self.username, self.password))
-        except Exception as e:
-            logging.exception("Error calling GET url %s: %s" % url, e.message)
-
     def get_retry(self, path):
         """
         Call HTTP GET against `path`. This version returns a `requests.Response` object. Useful in case of temporary
         network issues.
 
-        :param path: Endpoint path relative to Clowder api.
+        :param path: Endpoint path relative to Geostreams api.
         :return: Full response object so that we can check status on it and then retrieve the JSON body.
         :rtype: `requests.Response`
         :raises: `requests.HTTPError`
@@ -134,26 +121,43 @@ class ClowderClient(object):
         """
         Call HTTP POST against `path` with `content` in body.
 
-        :param path: Endpoint path relative to Clowder api.
+        :param path: Endpoint path relative to Geostreams api.
         :param content: Content to send as the body of the request.
         :return: Full response object so that we can check status on it and then retrieve the JSON body.
         :rtype: `requests.Response`
         :raises: `requests.HTTPError`
         """
         url = self.host + self.api_fragment + path
-        params = {'key': self.key}
 
         try:
-            return requests.post(url, params=params, data=json.dumps(content), headers=self.headers,
-                                 auth=(self.username, self.password))
+            k = requests.post(url, json=content, headers=self.headers)
+            return k
         except Exception as e:
             self.logger.error("POST %s: %s", url, e.message)
+
+    def put(self, path, content):
+        """
+        Call HTTP POST against `path` with `content` in body.
+
+        :param path: Endpoint path relative to Geostreams api.
+        :param content: Content to send as the body of the request.
+        :return: Full response object so that we can check status on it and then retrieve the JSON body.
+        :rtype: `requests.Response`
+        :raises: `requests.HTTPError`
+        """
+        url = self.host + self.api_fragment + path
+
+        try:
+            k = requests.put(url, json=content, headers=self.headers)
+            return k
+        except Exception as e:
+            self.logger.error("PUT %s: %s", url, e.message)
 
     def post_file(self, path, filename):
         """
         Call HTTP POST against `path` with `content` in body. Header with content-type is not required.
 
-        :param path: Endpoint path relative to Clowder api.
+        :param path: Endpoint path relative to Geostreams api.
         :param content: Content to send as the body of the request.
         :return: Full response object so that we can check status on it and then retrieve the JSON body.
         :rtype: `requests.Response`
@@ -161,10 +165,10 @@ class ClowderClient(object):
         """
 
         url = self.host + self.api_fragment + path
-        params = {'key': self.key}
+
         try:
-            return requests.post(url, params=params, files={"File": open(filename, 'rb')},
-                                 auth=(self.username, self.password))
+            return requests.post(url, files={"File": open(filename, 'rb')},
+                                 headers=self.headers)
         except Exception as e:
             self.logger.error("POST %s: %s", (url, e.message))
 
@@ -173,7 +177,7 @@ class ClowderClient(object):
         Call HTTP POST against `path` with `content` in body. Retry up to a certain number of times if necessary. Useful
         in case of temporary network issues.
 
-        :param path: Endpoint path relative to Clowder api.
+        :param path: Endpoint path relative to Geostreams api.
         :param content: Content to send as the body of the request.
         :return: Full response object so that we can check status on it and then retrieve the JSON body.
         :rtype: `requests.Response`
@@ -200,17 +204,15 @@ class ClowderClient(object):
         """
         Call HTTP DELETE against `path`.
 
-        TODO don't pass application/json as header
-
-        :param path: Endpoint path relative to Clowder api.
+        :param path: Endpoint path relative to Geostreams api.
         :return: Full response object so that we can check status on it and then retrieve the JSON body.
         :rtype: `requests.Response`
         :raises: `requests.HTTPError`
         """
         url = self.host + self.api_fragment + path
-        params = {'key': self.key}
+
         try:
-            return requests.delete(url, params=params, auth=(self.username, self.password))
+            return requests.delete(url, headers=self.headers)
         except Exception as e:
             self.logger.error("DELETE %s: %s", url, e.message)
 
@@ -219,7 +221,7 @@ class ClowderClient(object):
         Call HTTP DELETE against `path`. Retry up to a certain number of times if necessary. Useful in case of temporary
         network issues.
 
-        :param path: Endpoint path relative to Clowder api.
+        :param path: Endpoint path relative to Geostream api.
         :return: Full response object so that we can check status on it and then retrieve the JSON body.
         :rtype: `requests.Response`
         :raises: `requests.HTTPError`

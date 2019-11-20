@@ -1,25 +1,24 @@
 """
-    Clowder Streams API
+    Geostreams Streams API
 """
 
-from builtins import str
 from builtins import range
 from builtins import object
 import logging
 import json
-from pygeotemporal.client import ClowderClient
+from pygeotemporal.client import GeostreamsClient
 
 
 class StreamsApi(object):
     """
         API to manage the REST CRUD endpoints for Streams.
     """
-    def __init__(self, client=None, host=None, key=None, username=None, password=None):
+    def __init__(self, client=None, host=None, username=None, password=None):
         """Set client if provided otherwise create new one"""
         if client:
             self.api_client = client
         else:
-            self.client = ClowderClient(host=host, key=key, username=username, password=password)
+            self.client = GeostreamsClient(host=host, username=username, password=password)
 
     def streams_get(self):
         """
@@ -30,14 +29,14 @@ class StreamsApi(object):
         """
         logging.debug("Getting all streams")
         try:
-            return self.client.get("/geostreams/streams")
+            return self.client.get("/streams")
         except Exception as e:
             logging.error("Error retrieving stream list: %s", e.message)
 
     def streams_get_by_id(self, id):
         logging.debug("Getting stream with id %s" % id)
         try:
-            return self.client.get("/geostreams/streams/%s" % id)
+            return self.client.get("/streams/%s" % id)
         except Exception as e:
             logging.error("Error retrieving stream with id %s: %s" % id, e.message )
 
@@ -49,8 +48,8 @@ class StreamsApi(object):
         :rtype: `requests.Response`
         """
         logging.debug("Getting stream %s" % stream_name)
-        stream = self.client.get("/geostreams/streams?stream_name=" + stream_name).json()
-        if 'status' in stream and stream['status'] == "No data found":
+        stream = self.client.get("/streams?stream_name=" + stream_name).json()
+        if 'status' in stream and stream['status'] == "No data found" or not stream["streams"]:
             return None
         else:
             return stream
@@ -65,7 +64,7 @@ class StreamsApi(object):
         logging.debug("Adding stream")
 
         try:
-            return self.client.post("/geostreams/streams", stream)
+            return self.client.post("/streams", stream)
         except Exception as e:
             logging.error("Error retrieving streams: %s", e.message)
 
@@ -78,16 +77,17 @@ class StreamsApi(object):
         """
         logging.debug("Adding or getting stream")
 
-        stream_from_clowder = self.stream_get_by_name_json(stream['name'])
+        stream_from_geostreams = self.stream_get_by_name_json(stream['name'])
 
-        if stream_from_clowder is None:
+        if stream_from_geostreams is None:
             logging.info("Creating stream with name: " + stream['name'])
-            stream_from_clowder = self.client.post("/geostreams/streams", stream)
-            return stream_from_clowder.json()
+            result = self.client.post("/streams", stream)
+            if result.status_code != 200:
+                logging.info("Error posting stream")
+            stream_from_geostreams = self.stream_get_by_name_json(stream['name'])
 
-        else:
-            logging.info("Found stream %s", stream['name'])
-            return stream_from_clowder[0]
+        logging.info("Found stream %s", stream['name'])
+        return stream_from_geostreams["streams"][0]
 
     def stream_delete(self, stream_id):
         """
@@ -98,7 +98,7 @@ class StreamsApi(object):
         """
         logging.debug("Deleting stream %s" % stream_id)
         try:
-            return self.client.delete("/geostreams/streams/%s" % stream_id)
+            return self.client.delete("/streams/%s" % stream_id)
         except Exception as e:
             logging.error("Error deleting stream %s: %s", stream_id, e.message)
 
@@ -109,12 +109,13 @@ class StreamsApi(object):
         :param: sensor
         :return: stream Json object
         """
+
         stream = {
-            "sensor_id": str(sensor["id"]),
-            "name": sensor["name"],
-            "type": sensor["type"],
-            "geometry": sensor["geometry"],
-            "properties": sensor["properties"]
+            "sensor_id": sensor['id'],
+            "name": sensor['name'],
+            "type": sensor['geoType'],
+            "geometry": sensor['geometry'],
+            "properties": sensor['properties']
         }
 
         return stream
