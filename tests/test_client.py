@@ -9,34 +9,22 @@ from pygeotemporal.streams import StreamsApi
 
 
 @pytest.fixture
-def client():
-    host = ""
-    username = ""
-    password = ""
+def client(host, username, password):
     return GeostreamsClient(host=host, username=username, password=password)
 
 
 @pytest.fixture
-def sensors_client():
-    host = ""
-    username = ""
-    password = ""
+def sensors_client(host, username, password):
     return SensorsApi(host=host, username=username, password=password)
 
 
 @pytest.fixture
-def streams_client():
-    host = ""
-    username = ""
-    password = ""
+def streams_client(host, username, password):
     return StreamsApi(host=host, username=username, password=password)
 
 
 @pytest.fixture
-def datapoints_client():
-    host = "https://gltg-dev.ncsa.illinois.edu/geostreams"
-    username = "diegoac2@illinois.edu"
-    password = "Pa$$word"
+def datapoints_client(host, username, password):
     return DatapointsApi(host=host, username=username, password=password)
 
 
