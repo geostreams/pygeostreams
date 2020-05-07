@@ -51,6 +51,7 @@ class GeostreamsClient(object):
             self.headers = {"x-auth-token": r.headers["x-auth-token"], "Content-Encoding": "application/json"}
         except RequestException as e:
             logging.exception(f"Could not authenticate.\n {e}")
+            raise e
 
     def version(self):
         """Return Geostreams version info."""
@@ -145,6 +146,7 @@ class GeostreamsClient(object):
             r.raise_for_status()
         except RequestException as e:
             logging.exception(f"Error calling GET url {url}: {e}")
+            raise e
 
     def post(self, path, content, timeout: int = (125, 605)):
         """
@@ -169,6 +171,7 @@ class GeostreamsClient(object):
             return k
         except RequestException as e:
             self.logger.error(f"POST {url}: {e}")
+            raise e
 
     def put(self, path, content, timeout: int = (125, 605)):
         """
@@ -251,6 +254,7 @@ class GeostreamsClient(object):
             r.raise_for_status()
         except RequestException as e:
             logging.exception(f"Error calling POST url {url}: {e}")
+            raise e
 
     def delete(self, path, timeout: int = (120, 600)):
         """
@@ -305,3 +309,4 @@ class GeostreamsClient(object):
             r.raise_for_status()
         except RequestException as e:
             logging.exception(f"Error calling DELETE url {url}: {e}")
+            raise e
