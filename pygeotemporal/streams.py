@@ -5,7 +5,12 @@
 from builtins import range
 from builtins import object
 import logging
+
 import json
+from typing import Union, Tuple
+
+from requests.exceptions import RequestException
+
 from pygeotemporal.client import GeostreamsClient
 
 
@@ -20,41 +25,56 @@ class StreamsApi(object):
         else:
             self.client = GeostreamsClient(host=host, username=username, password=password)
 
-    def streams_get(self):
+    def streams_get(self, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Get the list of all available streams.
 
+        :param timeout: Number of seconds Requests will wait to establish a connection.
+        Specify a Tuple if connect and read timeouts should be different (with the first element being
+        the connection timeout, and the second being the read timeout.
         :return: Full list of streams.
         :rtype: `requests.Response`
         """
         logging.debug("Getting all streams")
         try:
-            return self.client.get("/streams")
-        except Exception as e:
-            logging.error("Error retrieving stream list: %s", e.message)
+            return self.client.get("/streams", timeout)
+        except RequestException as e:
+            logging.error(f"Error retrieving stream list: {e}")
+            raise e
 
-    def streams_get_by_id(self, id):
-        logging.debug("Getting stream with id %s" % id)
+    def streams_get_by_id(self, stream_id,
+                          timeout: Union[int, Tuple[int, int]] = (125, 605)):
+        logging.debug(f"Getting stream with id {stream_id}")
         try:
-            return self.client.get("/streams/%s" % id)
-        except Exception as e:
-            logging.error("Error retrieving stream with id %s: %s" % id, e.message )
+            return self.client.get("/streams/%s" % stream_id, timeout)
+        except RequestException as e:
+            logging.error(f"Error retrieving stream with id {stream_id}: {e}")
+            raise e
 
-    def stream_get_by_name_json(self, stream_name):
+    def stream_get_by_name_json(self, stream_name,
+                                timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Get a specific stream by id.
 
+        :param stream_name:
+        :param timeout: Number of seconds Requests will wait to establish a connection.
+        Specify a Tuple if connect and read timeouts should be different (with the first element being
+        the connection timeout, and the second being the read timeout.
         :return: stream object as JSON.
         :rtype: `requests.Response`
         """
-        logging.debug("Getting stream %s" % stream_name)
-        stream = self.client.get("/streams?stream_name=" + stream_name).json()
-        if 'status' in stream and stream['status'] == "No data found" or not stream["streams"]:
-            return None
-        else:
-            return stream
+        logging.debug(f"Getting stream {stream_name}")
+        try:
+            stream = self.client.get("/streams?stream_name=" + stream_name, timeout).json()
+            if 'status' in stream and stream['status'] == "No data found" or not stream["streams"]:
+                return None
+            else:
+                return stream
+        except RequestException as e:
+            logging.error(f"Error retrieving stream with name {stream_name}: {e}")
+            raise e
 
-    def stream_post(self, stream):
+    def stream_post(self, stream, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Create stream.
 
@@ -64,43 +84,56 @@ class StreamsApi(object):
         logging.debug("Adding stream")
 
         try:
-            return self.client.post("/streams", stream)
-        except Exception as e:
-            logging.error("Error retrieving streams: %s", e.message)
+            return self.client.post("/streams", stream, timeout)
+        except RequestException as e:
+            logging.error(f"Error retrieving streams: {e}")
+            raise e
 
-    def stream_post_json(self, stream):
+    def stream_post_json(self, stream, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Create stream.
 
+        :param stream:
+        :param timeout: Number of seconds Requests will wait to establish a connection.
+        Specify a Tuple if connect and read timeouts should be different (with the first element being
+        the connection timeout, and the second being the read timeout.
         :return: stream json.
         :rtype: `requests.Response`
         """
         logging.debug("Adding or getting stream")
+        try:
+            stream_from_geostreams = self.stream_get_by_name_json(stream['name'], timeout)
 
-        stream_from_geostreams = self.stream_get_by_name_json(stream['name'])
+            if stream_from_geostreams is None:
+                logging.info(f"Creating stream with name: {stream['name']}")
+                result = self.client.post("/streams", stream, timeout)
+                if result.status_code != 200:
+                    logging.info("Error posting stream")
+                stream_from_geostreams = self.stream_get_by_name_json(stream['name'], timeout)
 
-        if stream_from_geostreams is None:
-            logging.info("Creating stream with name: " + stream['name'])
-            result = self.client.post("/streams", stream)
-            if result.status_code != 200:
-                logging.info("Error posting stream")
-            stream_from_geostreams = self.stream_get_by_name_json(stream['name'])
+            logging.info(f"Found stream {stream['name']}")
+            return stream_from_geostreams["streams"][0]
+        except RequestException as e:
+            logging.error(f"Could not post stream: {e}")
+            raise e
 
-        logging.info("Found stream %s", stream['name'])
-        return stream_from_geostreams["streams"][0]
-
-    def stream_delete(self, stream_id):
+    def stream_delete(self, stream_id, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Delete a specific stream by id.
 
-        :return: If successfull or not.
+        :param stream_id:
+        :param timeout: Number of seconds Requests will wait to establish a connection.
+        Specify a Tuple if connect and read timeouts should be different (with the first element being
+        the connection timeout, and the second being the read timeout.
+        :return: If successful or not.
         :rtype: `requests.Response`
         """
-        logging.debug("Deleting stream %s" % stream_id)
+        logging.debug(f"Deleting stream {stream_id}")
         try:
-            return self.client.delete("/streams/%s" % stream_id)
-        except Exception as e:
-            logging.error("Error deleting stream %s: %s", stream_id, e.message)
+            return self.client.delete("/streams/%s" % stream_id, timeout)
+        except RequestException as e:
+            logging.error(f"Error deleting stream {stream_id}: {e}")
+            raise e
 
     def stream_create_json_from_sensor(self, sensor):
         """
@@ -120,23 +153,31 @@ class StreamsApi(object):
 
         return stream
 
-    def stream_delete_range(self, start, end, keyword):
+    def stream_delete_range(self, start, end, keyword,
+                            timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Deletes streams in a range of indexes [start, end] where the name includes keyword.
 
+        :param start:
+        :param end:
+        :param keyword:
+        :param timeout: Number of seconds Requests will wait to establish a connection.
+        Specify a Tuple if connect and read timeouts should be different (with the first element being
+        the connection timeout, and the second being the read timeout.
+        :return: None
         """
 
         for i in range(start, end + 1):
-            stream = self.streams_get_by_id(i)
+            stream = self.streams_get_by_id(i, timeout)
             json_stream = json.loads(stream.content)
             if 'name' in json_stream:
 
                 if keyword.lower() in json_stream['name'].encode("ascii").lower():
-                    self.stream_delete(i)
-                    logging.info("Stream Deleted, %s", i)
+                    self.stream_delete(i, timeout)
+                    logging.info(f"Stream Deleted, {i}")
                 else:
-                    logging.info("Sensor not deleted %s, no keyword match, stream name: %s", i, json_stream["name"])
+                    logging.info(f"Sensor not deleted {i}, no keyword match, stream name: {json_stream['name']}")
 
             else:
-                logging.info("No name keyword in stream, stream doesn't exist. Stream Id: %s", i)
+                logging.info(f"No name keyword in stream, stream doesn't exist. Stream Id: {i}")
         return

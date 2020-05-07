@@ -6,7 +6,9 @@ from builtins import str
 from builtins import object
 import logging
 
+from typing import Union, Tuple
 from dateutil.parser import parse
+from requests.exceptions import RequestException
 
 from pygeotemporal.client import GeostreamsClient
 
@@ -22,33 +24,45 @@ class DatapointsApi(object):
         else:
             self.client = GeostreamsClient(host=host, username=username, password=password)
 
-    def datapoint_post(self, datapoint):
+    def datapoint_post(self, datapoint, timeout: Union[int, Tuple[int, int]] = (120, 600)):
         """
         Add a datapoint.
 
+        :param datapoint:
+        :param timeout: Number of seconds Requests will wait to establish a connection.
+        Specify a Tuple if connect and read timeouts should be different (with the first element being
+        the connection timeout, and the second being the read timeout.
         :return: If successful or not.
         :rtype: `requests.Response`
         """
         logging.debug("Adding datapoint")
         try:
-            return self.client.post("/datapoints", datapoint)
-        except Exception as e:
-            logging.error("Error adding datapoint %s: %s", datapoint, e.message)
+            return self.client.post("/datapoints", datapoint, timeout)
+        except RequestException as e:
+            logging.error(f"Error adding datapoint {datapoint}: {e}")
+            raise e
 
-    def datapoints_count_by_sensor_get(self, sensor_id):
+    def datapoints_count_by_sensor_get(self, sensor_id,
+                                       timeout: Union[int, Tuple[int, int]] = (120, 600)):
         """
         Get the list of all available sensors.
 
+        :param sensor_id:
+        :param timeout: Number of seconds Requests will wait to establish a connection.
+        Specify a Tuple if connect and read timeouts should be different (with the first element being
+        the connection timeout, and the second being the read timeout.
         :return: Full list of sensors.
         :rtype: `requests.Response`
         """
         logging.debug("Counting datapoints by sensor")
         try:
-            return self.client.get("/datapoints?sensor_id=%s&onlyCount=true" % sensor_id)
-        except Exception as e:
-            logging.error("Error counting datapoints by sensor %s: %s", sensor_id, e.message)
+            return self.client.get("/datapoints?sensor_id=%s&onlyCount=true" % sensor_id, timeout)
+        except RequestException as e:
+            logging.error(f"Error counting datapoints by sensor {sensor_id}: {e}")
+            raise e
 
-    def datapoint_latest_get(self, sensor_id, stream_id, since=None):
+    def datapoint_latest_get(self, sensor_id, stream_id, since=None,
+                             timeout: Union[int, Tuple[int, int]] = (120, 600)):
         """
         Get latest datapoint for a given stream by retrieving datapoint since a recent date and then grabbing
         the latest one.
@@ -62,20 +76,38 @@ class DatapointsApi(object):
         else:
             url = "/datapoints?stream_id=%s&since=%s" % (stream_id, since)
         try:
-            datapoints = self.client.get_json(url)
+            datapoints = self.client.get_json(url, timeout)
             if isinstance(datapoints, list) and len(datapoints) > 0:
                 latest_datapoint = datapoints[-1]
                 start_date = parse(latest_datapoint['start_time']).strftime('%Y-%m-%d-%H-%M')
-                logging.info("Fetched datapoints for " + str(sensor_id) + " starting on " + start_date)
+                logging.info(f"Fetched datapoints for {sensor_id} starting on {start_date}")
             else:
-                logging.debug("No datapoints exist for " + str(sensor_id))
-        except Exception as e:
-            logging.error("Error getting datapoints for stream %s since %s: %s", stream_id, since, e.message)
+                logging.debug(f"No datapoints exist for {sensor_id}")
+        except RequestException as e:
+            logging.error(f"Error getting datapoints for stream {stream_id} since {since}: {e}")
+            raise e
 
         return latest_datapoint
 
     def datapoint_create_json(self, start_time, end_time, longitude, latitude, sensor_id, stream_id, sensor_name,
                               properties=None, owner=None, source=None, procedures=None, elevation=0):
+        """
+        Create a json representation of a datapoint
+
+        :param start_time:
+        :param end_time:
+        :param longitude:
+        :param latitude:
+        :param sensor_id:
+        :param stream_id:
+        :param sensor_name:
+        :param properties:
+        :param owner:
+        :param source:
+        :param procedures:
+        :param elevation:
+        :return:
+        """
         datapoint = {
             'start_time': start_time,
             'end_time': end_time,
@@ -105,11 +137,20 @@ class DatapointsApi(object):
 
         return datapoint
 
-    def datapoint_create_bulk(self, datapoints):
+    def datapoint_create_bulk(self, datapoints, timeout: Union[int, Tuple[int, int]] = (120, 600)):
+        """
+
+        :param datapoints:
+        :param timeout: Number of seconds Requests will wait to establish a connection.
+        Specify a Tuple if connect and read timeouts should be different (with the first element being
+        the connection timeout, and the second being the read timeout.
+        :return:
+        """
         logging.debug("Adding Datapoints in Bulk")
         try:
-            return self.client.post("/datapoints/bulk", datapoints)
-        except Exception as e:
-            logging.error("Error adding bulk datapoint: %s", e.message)
+            return self.client.post("/datapoints/bulk", datapoints, timeout)
+        except RequestException as e:
+            logging.error(f"Error adding bulk datapoint: {e}")
+            raise e
 
 
