@@ -7,6 +7,8 @@ from builtins import object
 import logging
 
 import json
+from typing import Union, Tuple
+
 from requests.exceptions import RequestException
 
 from pygeotemporal.client import GeostreamsClient
@@ -23,7 +25,7 @@ class StreamsApi(object):
         else:
             self.client = GeostreamsClient(host=host, username=username, password=password)
 
-    def streams_get(self, timeout: int = (125, 605)):
+    def streams_get(self, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Get the list of all available streams.
 
@@ -40,7 +42,8 @@ class StreamsApi(object):
             logging.error(f"Error retrieving stream list: {e}")
             raise e
 
-    def streams_get_by_id(self, stream_id, timeout: int = (125, 605)):
+    def streams_get_by_id(self, stream_id,
+                          timeout: Union[int, Tuple[int, int]] = (125, 605)):
         logging.debug(f"Getting stream with id {stream_id}")
         try:
             return self.client.get("/streams/%s" % stream_id, timeout)
@@ -48,7 +51,8 @@ class StreamsApi(object):
             logging.error(f"Error retrieving stream with id {stream_id}: {e}")
             raise e
 
-    def stream_get_by_name_json(self, stream_name, timeout: int = (125, 605)):
+    def stream_get_by_name_json(self, stream_name,
+                                timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Get a specific stream by id.
 
@@ -70,7 +74,7 @@ class StreamsApi(object):
             logging.error(f"Error retrieving stream with name {stream_name}: {e}")
             raise e
 
-    def stream_post(self, stream, timeout: int = (125, 605)):
+    def stream_post(self, stream, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Create stream.
 
@@ -85,7 +89,7 @@ class StreamsApi(object):
             logging.error(f"Error retrieving streams: {e}")
             raise e
 
-    def stream_post_json(self, stream, timeout: int = (125, 605)):
+    def stream_post_json(self, stream, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Create stream.
 
@@ -113,7 +117,7 @@ class StreamsApi(object):
             logging.error(f"Could not post stream: {e}")
             raise e
 
-    def stream_delete(self, stream_id, timeout: int = (125, 605)):
+    def stream_delete(self, stream_id, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Delete a specific stream by id.
 
@@ -149,7 +153,8 @@ class StreamsApi(object):
 
         return stream
 
-    def stream_delete_range(self, start, end, keyword, timeout: int = (125, 605)):
+    def stream_delete_range(self, start, end, keyword,
+                            timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Deletes streams in a range of indexes [start, end] where the name includes keyword.
 

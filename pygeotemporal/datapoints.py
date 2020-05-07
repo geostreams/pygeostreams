@@ -5,8 +5,9 @@
 from builtins import str
 from builtins import object
 import logging
-from dateutil.parser import parse
 
+from typing import Union, Tuple
+from dateutil.parser import parse
 from requests.exceptions import RequestException
 
 from pygeotemporal.client import GeostreamsClient
@@ -23,7 +24,7 @@ class DatapointsApi(object):
         else:
             self.client = GeostreamsClient(host=host, username=username, password=password)
 
-    def datapoint_post(self, datapoint, timeout: int = (120, 600)):
+    def datapoint_post(self, datapoint, timeout: Union[int, Tuple[int, int]] = (120, 600)):
         """
         Add a datapoint.
 
@@ -41,7 +42,8 @@ class DatapointsApi(object):
             logging.error(f"Error adding datapoint {datapoint}: {e}")
             raise e
 
-    def datapoints_count_by_sensor_get(self, sensor_id, timeout: int = (120, 600)):
+    def datapoints_count_by_sensor_get(self, sensor_id,
+                                       timeout: Union[int, Tuple[int, int]] = (120, 600)):
         """
         Get the list of all available sensors.
 
@@ -59,7 +61,8 @@ class DatapointsApi(object):
             logging.error(f"Error counting datapoints by sensor {sensor_id}: {e}")
             raise e
 
-    def datapoint_latest_get(self, sensor_id, stream_id, since=None, timeout: int = (120, 600)):
+    def datapoint_latest_get(self, sensor_id, stream_id, since=None,
+                             timeout: Union[int, Tuple[int, int]] = (120, 600)):
         """
         Get latest datapoint for a given stream by retrieving datapoint since a recent date and then grabbing
         the latest one.
@@ -134,7 +137,7 @@ class DatapointsApi(object):
 
         return datapoint
 
-    def datapoint_create_bulk(self, datapoints, timeout: int = (120, 600)):
+    def datapoint_create_bulk(self, datapoints, timeout: Union[int, Tuple[int, int]] = (120, 600)):
         """
 
         :param datapoints:

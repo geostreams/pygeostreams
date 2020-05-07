@@ -9,6 +9,8 @@ from builtins import object
 import json
 import logging
 import time
+from typing import Union, Tuple
+
 import requests
 from requests.exceptions import RequestException
 
@@ -69,7 +71,7 @@ class GeostreamsClient(object):
         else:
             r.raise_for_status()
 
-    def get_json(self, path, timeout: int = (125, 605)):
+    def get_json(self, path, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Call HTTP GET against `path`. This version returns a JSON object.
 
@@ -93,7 +95,7 @@ class GeostreamsClient(object):
             logging.exception(f"Error calling GET url {url}: {e}")
             raise e
 
-    def get(self, path, timeout: int = (125, 605)):
+    def get(self, path, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Call HTTP GET against `path`. This version returns a `requests.Response` object.
 
@@ -117,7 +119,7 @@ class GeostreamsClient(object):
             logging.exception(f"Error calling GET url {url}: {e}")
             raise e
 
-    def get_retry(self, path, timeout: int = (125, 605)):
+    def get_retry(self, path, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Call HTTP GET against `path`. This version returns a `requests.Response` object. Useful in case of temporary
         network issues.
@@ -148,7 +150,7 @@ class GeostreamsClient(object):
             logging.exception(f"Error calling GET url {url}: {e}")
             raise e
 
-    def post(self, path, content, timeout: int = (125, 605)):
+    def post(self, path, content, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Call HTTP POST against `path` with `content` in body.
 
@@ -173,7 +175,7 @@ class GeostreamsClient(object):
             self.logger.error(f"POST {url}: {e}")
             raise e
 
-    def put(self, path, content, timeout: int = (125, 605)):
+    def put(self, path, content, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Call HTTP POST against `path` with `content` in body.
 
@@ -198,7 +200,7 @@ class GeostreamsClient(object):
             self.logger.error(f"PUT {url}: {e}")
             raise e
 
-    def post_file(self, path, filename, timeout: int = (125, 605)):
+    def post_file(self, path, filename, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Call HTTP POST against `path` with `content` in body. Header with content-type is not required.
 
@@ -224,7 +226,7 @@ class GeostreamsClient(object):
             self.logger.error(f"POST {url}: {e}")
             raise e
 
-    def post_retry(self, path, content, timeout: int = (125, 605)):
+    def post_retry(self, path, content, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Call HTTP POST against `path` with `content` in body. Retry up to a certain number of times if necessary. Useful
         in case of temporary network issues.
@@ -256,7 +258,7 @@ class GeostreamsClient(object):
             logging.exception(f"Error calling POST url {url}: {e}")
             raise e
 
-    def delete(self, path, timeout: int = (120, 600)):
+    def delete(self, path, timeout: Union[int, Tuple[int, int]] = (120, 600)):
         """
         Call HTTP DELETE against `path`.
 
@@ -280,7 +282,7 @@ class GeostreamsClient(object):
             self.logger.error(f"DELETE {url}: {e}")
             raise e
 
-    def delete_retry(self, path, timeout: int = (125, 605)):
+    def delete_retry(self, path, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Call HTTP DELETE against `path`. Retry up to a certain number of times if necessary. Useful in case of temporary
         network issues.

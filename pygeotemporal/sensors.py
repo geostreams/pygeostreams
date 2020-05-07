@@ -7,6 +7,7 @@ from builtins import object
 import logging
 import time
 from datetime import datetime
+from typing import Union, Tuple
 
 from requests.exceptions import RequestException
 
@@ -24,7 +25,7 @@ class SensorsApi(object):
         else:
             self.client = GeostreamsClient(host=host, username=username, password=password)
 
-    def sensors_get(self, timeout: int = (125, 605)):
+    def sensors_get(self, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Get the list of all available sensors.
 
@@ -41,7 +42,7 @@ class SensorsApi(object):
             logging.error(f"Error retrieving sensor list: {e}")
             raise e
 
-    def sensors_refresh_cache(self, timeout: int = (125, 605)):
+    def sensors_refresh_cache(self, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Get all available sensors one by one, return nothing
 
@@ -68,7 +69,8 @@ class SensorsApi(object):
             logging.error(f"Error caching sensor list: {e}")
             raise e
 
-    def sensor_refresh_cache(self, sensor_id, timeout: int = (125, 605)):
+    def sensor_refresh_cache(self, sensor_id,
+                             timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Get all available sensors one by one, return nothing
 
@@ -97,7 +99,7 @@ class SensorsApi(object):
             logging.error(f"Error caching sensor: {e}")
             raise e
 
-    def sensor_get(self, sensor_id, timeout: int = (125, 605)):
+    def sensor_get(self, sensor_id, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Get a specific sensor by id.
 
@@ -115,7 +117,7 @@ class SensorsApi(object):
             logging.error(f"Error retrieving sensor {sensor_id}: {e}")
             raise e
 
-    def sensor_get_by_name(self, sensor_name, timeout: int = (125, 605)):
+    def sensor_get_by_name(self, sensor_name, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Get a specific sensor by id.
 
@@ -133,7 +135,7 @@ class SensorsApi(object):
             logging.error(f"Error retrieving sensor {sensor_name}: {e}")
             raise e
 
-    def sensor_post(self, sensor, timeout: int = (125, 605)):
+    def sensor_post(self, sensor, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Create sensor.
 
@@ -151,7 +153,7 @@ class SensorsApi(object):
             logging.error(f"Error adding sensor {sensor['name']}: {e}")
             raise e
 
-    def sensor_post_json(self, sensor, timeout: int = (125, 605)):
+    def sensor_post_json(self, sensor, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Create sensor.
 
@@ -182,7 +184,7 @@ class SensorsApi(object):
             logging.error(f"Error adding sensor {sensor['name']}: {e}")
             raise e
 
-    def sensor_delete(self, sensor_id, timeout: int = (125, 605)):
+    def sensor_delete(self, sensor_id, timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Delete a specific sensor by id.
 
@@ -234,7 +236,8 @@ class SensorsApi(object):
             sensor['properties']['type']['title'] = title
         return sensor
 
-    def sensor_statistics_post(self, sensor_id, timeout: int = (125, 605)):
+    def sensor_statistics_post(self, sensor_id,
+                               timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Update sensor statistics.
         :param sensor_id:
@@ -279,7 +282,8 @@ class SensorsApi(object):
                 time_bin = 'minute'
         return time_bin
 
-    def update_sensor_metadata(self, sensor, timeout: int = (125, 605)):
+    def update_sensor_metadata(self, sensor,
+                               timeout: Union[int, Tuple[int, int]] = (125, 605)):
         """
         Update sensor metadata
         :param sensor: Sensor json
