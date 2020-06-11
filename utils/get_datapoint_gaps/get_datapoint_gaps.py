@@ -57,7 +57,7 @@ for sensor in sensors:
     end_date = datetime.strptime(sensor['max_end_time'][:10], '%Y-%m-%d')
 
     datapoints_all = []
-    count_datapoints = 0
+
     # get datapoints one month at a time
     while start_date <= end_date:
 
@@ -69,7 +69,6 @@ for sensor in sensors:
                                                                  end_month.strftime('%Y-%m-%d')).json()
 
         for datapoint in datapoints:
-            count_datapoints += 1
             datapoints_all.append(datapoint)
 
         start_date = end_month + relativedelta(days=+1)
