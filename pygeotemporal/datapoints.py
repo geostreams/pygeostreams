@@ -154,18 +154,3 @@ class DatapointsApi(object):
             raise e
 
 
-    def get_datapoints_by_sensor_id(self, sensor_id, since=None, until=None):
-
-        if since is None and until is None:
-            url = '/datapoints?sensor_id=%s' % sensor_id
-        elif since is None and until is not None:
-            url = "/datapoints?sensor_id=%s&until=%s" % (sensor_id, until)
-        elif since is not None and until is None:
-            url = "/datapoints?sensor_id=%s&since=%s" % (sensor_id, since)
-        elif since is not None and until is not None:
-            url = "/datapoints?sensor_id=%s&since=%s&until=%s" % (sensor_id, since, until)
-
-        try:
-            return self.client.get(url)
-        except Exception as e:
-            logging.error("Error getting datapoints from sensor %s: " % sensor_id, e.message)

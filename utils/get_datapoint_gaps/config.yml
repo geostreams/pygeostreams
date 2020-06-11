@@ -1,8 +1,0 @@
-host: https://greatlakestogulf.org/geostreams
-username:
-password:
-
-# path and file to save e.g. /Users/marcuss/Desktop/gaps.csv
-download_location:
-
-min_gap_length: 7
