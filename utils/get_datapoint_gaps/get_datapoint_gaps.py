@@ -25,15 +25,15 @@ sensors = sensorclient.sensors_get().json()['sensors']
 print("sensor count:", len(sensors))
 
 gaps_by_sensor_id = {}
-count = 0
+sensor_count = 0
 
 for sensor in sensors:
 
-    count += 1
+    sensor_count += 1
 
     print(" ")
     print("Starting gap quantification for sensor_id:", sensor['id'],',',
-          "sensor_count:", count,',',
+          "sensor_count:", sensor_count,',',
           "max_time:", sensor['max_end_time'][:10], ',',
           "min_time:", sensor['min_start_time'][:10], ',',
           "start time(h):", (time() - clock) / 3600)
@@ -56,9 +56,9 @@ for sensor in sensors:
     end_month = None
     end_date = datetime.strptime(sensor['max_end_time'][:10], '%Y-%m-%d')
 
-    datapoints_all = []
 
     # get datapoints one month at a time
+    start_times = []
     while start_date <= end_date:
 
         end_month = start_date + relativedelta(months=+1)
@@ -69,18 +69,12 @@ for sensor in sensors:
                                                                  end_month.strftime('%Y-%m-%d')).json()
 
         for datapoint in datapoints:
-            datapoints_all.append(datapoint)
+            try:
+                start_times.append(datetime.strptime(datapoint['start_time'][:10], '%Y-%m-%d'))
+            except Exception as e:
+                print("Error getting datapoint")
 
         start_date = end_month + relativedelta(days=+1)
-    print("n datapoints:", len(datapoints_all))
-
-    # create list of datapoint dates
-    start_times = []
-    for datapoint in datapoints_all:
-        try:
-            start_times.append(datetime.strptime(datapoint['start_time'][:10], '%Y-%m-%d'))
-        except Exception as e:
-            print("Error getting datapoint")
 
     start_times.sort()
 
@@ -113,7 +107,8 @@ for sensor in sensors:
         fieldnames = ['sensor_id', 'owner', 'lat', 'lon', 'sensor_start_date', 'sensor_end_date', 'gap_days',
                       'gap_start', 'gap_end']
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        writer.writeheader()
+        if sensor_count == 1:
+            writer.writeheader()
 
         for sensor_gap_size in gaps_by_sensor_id[sensor['id']]['gaps']:
             for gap_dates in gaps_by_sensor_id[sensor['id']]['gaps'][sensor_gap_size]:
