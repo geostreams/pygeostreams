@@ -169,3 +169,4 @@ class DatapointsApi(object):
             return self.client.get(url)
         except Exception as e:
             logging.error("Error getting datapoints from sensor %s: " % sensor_id, e.message)
+            raise e
