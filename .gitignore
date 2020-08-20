@@ -5,3 +5,4 @@ docs/build/
 .cache
 *.iml
 .DS_Store
+{}-checkpoint.ipynb
