@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added 
 - Added timeout to requests
   [GEOD-1312](https://opensource.ncsa.illinois.edu/jira/browse/GEOD-1312)
+- Added utils directory, datapoint gap quantification script, and get_datapoints_by_sensor_id with since and until parameters
+  [GLGVO-654](https://opensource.ncsa.illinois.edu/jira/browse/GLGVO-654)
 - Add jupyter notebook for getting sensors and datapoints
   [GLGVO-598](https://opensource.ncsa.illinois.edu/jira/browse/GLGVO-598)
 
