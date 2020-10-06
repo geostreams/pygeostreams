@@ -153,4 +153,52 @@ class DatapointsApi(object):
             logging.error(f"Error adding bulk datapoint: {e}")
             raise e
 
+    def get_datapoints_by_sensor_id(self, sensor_id, since=None, until=None):
 
+        if since is None and until is None:
+            url = '/datapoints?sensor_id=%s' % sensor_id
+        elif since is None and until is not None:
+            url = "/datapoints?sensor_id=%s&until=%s" % (sensor_id, until)
+        elif since is not None and until is None:
+            url = "/datapoints?sensor_id=%s&since=%s" % (sensor_id, since)
+        elif since is not None and until is not None:
+            url = "/datapoints?sensor_id=%s&since=%s&until=%s" % (sensor_id, since, until)
+
+        try:
+            return self.client.get(url)
+        except Exception as e:
+            logging.error("Error getting datapoints from sensor %s: %s " % (sensor_id, e.message))
+            raise e
+
+    def get_datapoints(self, sensor_id=None, since=None, until=None, sources=None, format=None, geocode=None, onlyCount=None):
+
+        args_in = {
+            "sensor_id":sensor_id,
+            "since":since,
+            "until":until,
+            "sources":sources,
+            "format":format,
+            "geocode":geocode,
+            "onlyCount": onlyCount
+        }
+
+        # Create URL with arguments
+        count_args = 0
+        url = "/datapoints?"
+        for arg_in in args_in.keys():
+            if args_in[arg_in] is None:
+                continue
+            url += "%s=%s&" % (arg_in, args_in[arg_in])
+            count_args += 1
+
+        url = url[:-1]
+
+        if count_args == 0:
+            logging.error("Error getting datapoints - no arguments supplied")
+            return "Error getting datapoints - no arguments supplied"
+
+        try:
+            return self.client.get(url)
+        except Exception as e:
+            logging.error("Error getting datapoints from sensor %s: %s" % (sensor_id, e.message))
+            raise e

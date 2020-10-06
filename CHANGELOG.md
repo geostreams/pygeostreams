@@ -10,6 +10,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added 
 - Added timeout to requests
   [GEOD-1312](https://opensource.ncsa.illinois.edu/jira/browse/GEOD-1312)
-- Added a pandas dataframe jupyter notebook
-  [GLGVO-694](https://opensource.ncsa.illinois.edu/jira/browse/GLGVO-694)  
-
+- Added 2 new jupyter notebooks create pandas dataframe, add get_datapoints
+  [GLGVO-695](https://opensource.ncsa.illinois.edu/jira/browse/GLGVO-695)
