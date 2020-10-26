@@ -299,3 +299,16 @@ class SensorsApi(object):
         except RequestException as e:
             logging.error(f"Error updating sensor metadata for sensor {sensor_id}: {e}")
             raise e
+
+    def sensors_by_polygon(self, geocode, timeout: Union[int, Tuple[int, int]] = (125, 605)):
+
+        url = '/sensors?geocode=%s' % geocode
+
+        try:
+            return self.client.get(url, timeout)
+        except RequestException as e:
+            logging.error(f"Error retrieving sensor list: {e}")
+            raise e
+
+
+
