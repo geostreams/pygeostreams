@@ -309,6 +309,3 @@ class SensorsApi(object):
         except RequestException as e:
             logging.error(f"Error retrieving sensor list: {e}")
             raise e
-
-
-
