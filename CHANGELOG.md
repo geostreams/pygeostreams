@@ -10,5 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added 
 - Added timeout to requests
   [GEOD-1312](https://opensource.ncsa.illinois.edu/jira/browse/GEOD-1312)
-- Added 2 new jupyter notebooks create pandas dataframe, add get_datapoints
-  [GLGVO-695](https://opensource.ncsa.illinois.edu/jira/browse/GLGVO-695)
+- Added utils directory, datapoint gap quantification script, and get_datapoints_by_sensor_id with since and until parameters
+  [GLGVO-654](https://opensource.ncsa.illinois.edu/jira/browse/GLGVO-654)
+- Added 2 new jupyter notebooks and 2 new pygeotemporal methods
+  [GLGVO-708](https://opensource.ncsa.illinois.edu/jira/browse/GLGVO-708
