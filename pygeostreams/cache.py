@@ -12,7 +12,7 @@ from datetime import datetime
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
 
-from pygeotemporal.client import GeostreamsClient
+from pygeostreams.client import GeostreamsClient
 
 
 class CacheApi(object):

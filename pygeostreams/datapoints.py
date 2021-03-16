@@ -10,7 +10,7 @@ from typing import Union, Tuple
 from dateutil.parser import parse
 from requests.exceptions import RequestException
 
-from pygeotemporal.client import GeostreamsClient
+from pygeostreams.client import GeostreamsClient
 
 
 class DatapointsApi(object):

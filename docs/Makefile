@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = Pygeotemporal
+SPHINXPROJ    = Pygeostreams
 SOURCEDIR     = source
 BUILDDIR      = build
 
