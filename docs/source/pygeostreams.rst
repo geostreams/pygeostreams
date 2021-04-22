@@ -1,10 +1,10 @@
-Pygeotemporal package
+Pygeostreams package
 =====================
 
 Submodules
 ----------
 
-pygeotemporal.client module
+pygeostreams.client module
 ---------------------------
 
 .. automodule:: client
@@ -12,7 +12,7 @@ pygeotemporal.client module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.csv module
+pygeostreams.csv module
 ------------------------
 
 .. automodule:: csv
@@ -20,7 +20,7 @@ pygeotemporal.csv module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.datapoints module
+pygeostreams.datapoints module
 -------------------------------
 
 .. automodule:: datapoints
@@ -28,7 +28,7 @@ pygeotemporal.datapoints module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.geocode_convert module
+pygeostreams.geocode_convert module
 ------------------------------------
 
 .. automodule:: geocode_convert
@@ -36,7 +36,7 @@ pygeotemporal.geocode_convert module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.map_names module
+pygeostreams.map_names module
 ------------------------------
 
 .. automodule:: map_names
@@ -44,7 +44,7 @@ pygeotemporal.map_names module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.scheduler module
+pygeostreams.scheduler module
 ------------------------------
 
 .. automodule:: scheduler
@@ -52,7 +52,7 @@ pygeotemporal.scheduler module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.sensors module
+pygeostreams.sensors module
 ----------------------------
 
 .. automodule:: sensors
@@ -60,7 +60,7 @@ pygeotemporal.sensors module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.streams module
+pygeostreams.streams module
 ----------------------------
 
 .. automodule:: streams
@@ -68,7 +68,7 @@ pygeotemporal.streams module
         :undoc-members:
         :show-inheritance:
 
-pygeotemporal.time_transformers module
+pygeostreams.time_transformers module
 --------------------------------------
 
 .. automodule:: time_transformers
@@ -81,7 +81,7 @@ pygeotemporal.time_transformers module
 Module contents
 ---------------
 
-.. automodule:: pygeotemporal
+.. automodule:: pygeostreams
         :members:
         :undoc-members:
         :show-inheritance:

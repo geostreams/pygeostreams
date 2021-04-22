@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=source
 set BUILDDIR=build
-set SPHINXPROJ=Pygeotemporal
+set SPHINXPROJ=Pygeostreams
 
 if "%1" == "" goto help
 

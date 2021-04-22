@@ -1,7 +1,7 @@
-pygeotemporal
+pygeostreams
 =============
 
 .. toctree::
     :maxdepth: 4
 
-    pygeotemporal
+    pygeostreams

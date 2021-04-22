@@ -9,9 +9,9 @@ RUN apt-get -q -q update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && adduser --system clowder
 
-COPY pygeotemporal /tmp/pygeotemporal/pygeotemporal
-COPY setup.py requirements.txt /tmp/pygeotemporal/
+COPY pygeostreams /tmp/pygeostreams/pygeostreams
+COPY setup.py requirements.txt /tmp/pygeostreams/
 
-RUN pip install --upgrade  -r /tmp/pygeotemporal/requirements.txt \
-    && pip install --upgrade /tmp/pygeotemporal \
-    && rm -rf /tmp/pygeotemporal
+RUN pip install --upgrade  -r /tmp/pygeostreams/requirements.txt \
+    && pip install --upgrade /tmp/pygeostreams \
+    && rm -rf /tmp/pygeostreams
