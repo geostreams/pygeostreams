@@ -2,10 +2,10 @@ import pytest
 
 from requests.exceptions import ConnectionError
 
-from pygeotemporal.client import GeostreamsClient
-from pygeotemporal.datapoints import DatapointsApi
-from pygeotemporal.sensors import SensorsApi
-from pygeotemporal.streams import StreamsApi
+from pygeostreams.client import GeostreamsClient
+from pygeostreams.datapoints import DatapointsApi
+from pygeostreams.sensors import SensorsApi
+from pygeostreams.streams import StreamsApi
 
 
 @pytest.fixture
