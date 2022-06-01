@@ -3,8 +3,8 @@ import logging
 import pytest
 from requests import HTTPError
 
-from pygeotemporal.client import GeostreamsClient
-from pygeotemporal.sensors import SensorsApi
+from pygeostreams.client import GeostreamsClient
+from pygeostreams.sensors import SensorsApi
 
 
 def test_get_sensors(caplog, host, username, password):

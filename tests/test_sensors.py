@@ -1,13 +1,12 @@
 import logging
 
-from pygeotemporal.sensors import SensorsApi
+from pygeostreams.sensors import SensorsApi
 import pytest
 import json
 
 
 # testing post, get, and delete here so we don't populate db with test sensors
-def test_sensor_endpoint(caplog, host, username, password):
-    caplog.setLevel(logging.DEBUG)
+def test_sensor_endpoint( host, username, password):
     client = SensorsApi(host=host, username=username, password=password)
 
     # test create sensor
@@ -36,8 +35,7 @@ def test_sensor_endpoint(caplog, host, username, password):
 
 
 @pytest.mark.skip(reason="need to manually set the sensor id")
-def test_delete_sensor(caplog, host, username, password):
-    caplog.setLevel(logging.DEBUG)
+def test_delete_sensor( host, username, password):
     client = SensorsApi(host=host, username=username, password=password)
 
     sensor_name = "USGS-07029150"
